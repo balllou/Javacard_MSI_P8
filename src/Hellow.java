@@ -39,7 +39,7 @@ public void process(APDU apdu) throws ISOException {
     switch (buffer[ISO7816.OFFSET_INS]) {
             case SAY_MY_NAME:
                     Util.arrayCopy(name,(short)0,buffer,(short)0,(short)name.length);
-                    apdu.setOutgoingAndSend((short) 0, (short) 1);
+                    apdu.setOutgoingAndSend((short) 0, (short) name.length);
                     break;
 
             case SAY_HELLOW_MOTHERFUCKER:

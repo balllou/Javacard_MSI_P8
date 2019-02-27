@@ -1,0 +1,17 @@
+fonctions client :
+
+hex to str(value_hex)
+list_int_to_hex(list)
+send_data(applet,command,offset_data,data_length,data)
+init_carte() -->  constructeur : init du secret, des crédits et du pin
+decrement_credit(value)
+log_transaction() --> log coté client uniquement
+lock_card(key)
+unlock_card(key)
+check_pin(pin)
+connexion()
+deconnexion()
+choose_applet()
+
+
+fonction carte : (dans le switch case)
