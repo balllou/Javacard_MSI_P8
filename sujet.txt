@@ -1,1 +1,13 @@
-test
+sur carte : 500 crédits pour acheter des produits --> loguer transaction coté terminal client ( pas la carte)
+nom, prénom du client tributaire de la carte + numéro de participant + clé privée sur carte pour signer + id signé par une clé
+carte protégée avec code pin
+2 participants peuvent s'échanger des crédits
+loguer ces échanges sur chacune des cartes (id c1, id c2, montant) --> signé par c1 et c2
+ 
+
+
+authentification : authentifier les cartes qu'on produit
+			authentification du tributaire de la carte (pin)
+
+
+rendu : proposition commerciale
