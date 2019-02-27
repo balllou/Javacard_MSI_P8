@@ -15,3 +15,12 @@ choose_applet()
 
 
 fonction carte : (dans le switch case)
+change_pin(pin)
+decrement_credit(value)
+log_echange_credit(c1,c2,montant,signature_c1,signature_c2)
+echange_credit(c1,c2,montant)
+increment_credit(value)
+lock_card(key)
+unlock_card(key)
+choose_applet()
+init_carte()
