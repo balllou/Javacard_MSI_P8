@@ -1,0 +1,19 @@
+from smartcard.System import readers
+r=readers()
+connection=r[0].createConnection()
+connection.connect()
+#Selection AID
+data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
+#afficahge compteur
+data, sw1, sw2 = connection.transmit([0xB0,0x02,0x00,0x00,0x01,0x00,0x7F])
+print('Le compteur vaut : ', hex(data[0]))
+#compteur = compteur - 1
+data, sw1, sw2 = connection.transmit([0xB0,0x01,0x00,0x00,0x01,0x00,0x7F])
+print('Le compteur decroit')
+#afficahge compteur
+data, sw1, sw2 = connection.transmit([0xB0,0x02,0x00,0x00,0x01,0x00,0x7F])
+print('Le compteur vaut : ', hex(data[0]))
+connection.disconnect()
+#mise du compteur à 5
+data, sw1, sw2 = connection.transmit([0xB0,0x03,0x00,0x00,0x01,0x05])
+print('on met le compteur')
