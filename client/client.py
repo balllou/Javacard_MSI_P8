@@ -5,8 +5,8 @@ from smartcard.System import readers
 from logging.handlers import RotatingFileHandler
 import os
 import logging
-
-
+import secrets
+import ecdsa
 
 
 def hex_to_str(value_hex):
@@ -33,31 +33,29 @@ print(list_int_to_hex(list_in))
 #Ici, on veut tout d'abord faire une install en lancant lacommande d'install de cles en clip avec paramete --param PIN(2octets)Secret(2Octet)
 #Questio: doit on générer des cles (2 octets pas beaucoup) ou secret définit par la personne en caissequi délivre les cartes
 def init_carte(name,surname,pin):
-    #     # generate private/public key pair
-    # key = rsa.generate_private_key(backend=default_backend(), public_exponent=65537, \
-    #     key_size=2048)
-    # # get public key in OpenSSH format
-    # public_key = key.public_key().public_bytes(serialization.Encoding.OpenSSH, \
-    #     serialization.PublicFormat.OpenSSH)
-    # # get private key in PEM container format
-    # pem = key.private_bytes(encoding=serialization.Encoding.PEM,
-    #     format=serialization.PrivateFormat.TraditionalOpenSSL,
-    #     encryption_algorithm=serialization.NoEncryption())
-    # # decode to printable strings
-    # private_key_str = pem.decode('utf-8')
-    # public_key_str = public_key.decode('utf-8')
+    namehex=hex(name)+ ""
+    surnamehex=hex(surname)+""
+    pinhex=hex(pin) 
+    clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)#Géneration clé secrete 
+    clepublic = clesecrete.get_verifying_key()#Génération clé publique 
+    signdata = clesecrete.sign(b"message")#Exemple signature message
+    clesecrete.verify(signdata, b"message") # True 
 
-    # print('Private key = ')
-    # print(private_key_str)
-    # print('Public key = ')
-    # print(public_key_str)
+
     namehex=hex(name)+ ""
     surnamehex=hex(surname)+""
     pinhex=hex(pin) 
     #ICi ce client devra choisir de locker la carte a la fin 
-    cmd="gp -install blabka.cap --param PIN+Key"
+    cmd="gp -install blabka.cap --param" +pinhex+generatesecrets
 
+# import ecdsa
 
+# message = b"message"
+# public_key = '98cedbb266d9fc38e41a169362708e0509e06b3040a5dfff6e08196f8d9e49cebfb4f4cb12aa7ac34b19f3b29a17f4e5464873f151fd699c2524e0b7843eb383'
+# sig = '740894121e1c7f33b174153a7349f6899d0a1d2730e9cc59f674921d8aef73532f63edb9c5dba4877074a937448a37c5c485e0d53419297967e95e9b1bef630d'
+
+# vk = ecdsa.VerifyingKey.from_string(bytes.fromhex(public_key), curve=ecdsa.SECP256k1)
+# vk.verify(bytes.fromhex(sig), message) # True
 #def send_data(applet,command,offset_data,data_length,data):
 #   data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
         #Valeurs à définir
