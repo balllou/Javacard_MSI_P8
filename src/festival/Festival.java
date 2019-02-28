@@ -12,41 +12,41 @@ public class Festival extends Applet {
 
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 
-	// déclaration des constantes du pin
+	// commandes
 
 	static final byte INS_CHECK_PIN = 0x00;
 	static final byte INS_PRINT_SECRET = 0x01;
 	static final byte INS_UPDATE_PIN = 0x02;
 	static final byte INS_DEBUG = 0x03;
-
+	static final byte INS_GET_INFO_CLIENT = 0x07;
+	static final byte INS_DECREMENT = 0x08;
+	static final byte INS_ECHANGE = 0x09;
 	
+	//debug
 	private byte[] MESS_DEBUG = { 'D', 'e', 'B', 'U', 'G', ' ' };
 
+	//tailles pour la chaine hex en paramètre d'install
 	private static final byte PIN_LENGTH = 0x02;
 	private static final byte PIN_TRY_LIMIT = 0x03;
-	private static final byte SECRET_LENGTH = 0x02;
+	private static final byte FAM_NAME_LENGTH = 0x0C;
+	private static final byte NAME_LENGTH = 0x0C;
+	private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
+	private static final byte SECRET_KEY_LENGTH = 0x20;	// 256 bit
+	private static final byte SIGNATURE_LENGTH = 0x08;	// 64 bit
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	static final short SW_PIN_VERIFICATION_FAILED = 0x6302;
 
-	// déclaration des constantes du client
 
-	static final byte INS_SET_NAME = 0x04;
-	static final byte INS_SET_FAM_NAME = 0x05;
-	static final byte INS_SET_NUM_PARTICIPANT = 0x06;
-	static final byte INS_GET_INFO_CLIENT = 0x07;
-
-	// instructions de traitement
-	static final byte INS_DECREMENT = 0x08;
-	static final byte INS_ECHANGE = 0x09;
-
-	// déclaration des attributs de classe (initialisés dans le constructeur)
-	private static byte[] secret;
+	// attributs (initialisés dans le constructeur)
+	
 	private static OwnerPIN m_pin;
 	private static byte[] m_name;
 	private static byte[] m_fam_name;
 	private static byte m_num_participant;
-	private static byte m_credit;
+	private static short m_credit;
+	private static byte [] m_signature;
+	private static byte [] m_secret_key;
 
 	// constructeur
 	private Festival(byte[] bArray, short bOffset, byte bLength)
@@ -54,29 +54,37 @@ public class Festival extends Applet {
 		byte aidLength = bArray[bOffset];
 		short controlLength = (short) (bArray[(short) (bOffset + 1 + aidLength)] & (short) 0x00FF);
 		short dataLength = (short) (bArray[(short) (bOffset + 1 + aidLength + 1 + controlLength)] & (short) 0x00FF);
-
-		if ((byte) dataLength != (byte) (PIN_LENGTH + SECRET_LENGTH)) {
+		
+		//si data envoyé en param + long que pin + fam_name + name + num_participant + secret_key
+		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SECRET_KEY_LENGTH)) {
 			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 		}
-
-		// gp -v --install Festival221.cap --params 0102426f
-
+		//récupération des data passés en paramètres exemple : gp -v --install Festival221.cap --params 0102426f
+		//récupération pin
 		m_pin = new OwnerPIN(PIN_TRY_LIMIT, PIN_LENGTH);
 		m_pin.update(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1), PIN_LENGTH);
 
-		secret = new byte[(short) SECRET_LENGTH];
-		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH), secret,
-				(short) 0, SECRET_LENGTH);
+		//récupération des infos du client et de la signature correspondante
+		//nom de famille
+		m_fam_name= new byte [(short) FAM_NAME_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH ), m_fam_name, (short) 0, FAM_NAME_LENGTH);
+		//prénom
+		m_name=new byte [(short) NAME_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH), m_name, (short) 0, NAME_LENGTH);
+		//numéro de participant
+		m_num_participant=bArray[(short)(bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH)]; // tester si erreur, si oui passer par un tableau de byte temporaire
+		//signature
+		m_signature=new byte [(short)SIGNATURE_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
+		//récupération de la clé privée pour signer les échanges entre cartes
 
-		m_name = new byte[] { 'j', 'e', 'a', 'n' };
-		m_fam_name = new byte[] { 'b', 'o', 'n' };
-		// m_fam_name=fam_name;
-		// m_name=name;
-		m_num_participant = 0;
-		m_credit = (byte) 500;
+		// m_secret_key=makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
+		m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key, (short) 0, SECRET_KEY_LENGTH);
+		m_credit = (short) 500;
 
 	}
-
+	//methode d'installation de l'applet sur la carte (appelée avec gp -v --install Festival221.cap --params 0102426f)
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
 
 		// bArray,bOffset,bLength
@@ -100,11 +108,11 @@ public class Festival extends Applet {
 			m_pin.reset();
 
 			Util.arrayCopyNonAtomic(MESS_DEBUG, (short) 0, buffer, (short) 0, (short) MESS_DEBUG.length);
-			Util.arrayCopyNonAtomic(secret, (short) 0, buffer, (short) MESS_DEBUG.length, (short) secret.length);
+			// Util.arrayCopyNonAtomic(secret, (short) 0, buffer, (short) MESS_DEBUG.length, (short) secret.length);
 
-			buffer[(short) (MESS_DEBUG.length + secret.length)] = m_pin.getTriesRemaining();
+			// buffer[(short) (MESS_DEBUG.length + secret.length)] = m_pin.getTriesRemaining();
 
-			apdu.setOutgoingAndSend((short) 0, (short) (MESS_DEBUG.length + secret.length + 1));
+			apdu.setOutgoingAndSend((short) 0, (short) (MESS_DEBUG.length));// + secret.length + 1)); //secret = nb try restants pour pin
 
 			break;
 
@@ -123,10 +131,10 @@ public class Festival extends Applet {
 			ISOException.throwIt(SW_PIN_VERIFICATION_FAILED);
 			break;
 
-		case INS_PRINT_SECRET:
+		// case INS_PRINT_SECRET:
 
-			print_secret(apdu);
-			break;
+		// 	print_secret(apdu);
+		// 	break;
 
 		case INS_GET_INFO_CLIENT:
 			Util.arrayCopy(m_name, (short) 0, buffer, (short) 0, (short) m_name.length);
@@ -134,21 +142,7 @@ public class Festival extends Applet {
 			buffer[(short)(m_name.length + m_fam_name.length+1)]=m_num_participant;
 			apdu.setOutgoingAndSend((short) 0, (short) (m_name.length + m_fam_name.length + 1));
 			break;
-		case INS_SET_FAM_NAME:
-			apdu.setIncomingAndReceive();
-			Util.arrayCopy(buffer, ISO7816.OFFSET_CDATA, m_fam_name, (short) 0, (short) buffer.length);
-			break;
-
-		case INS_SET_NAME:
-			apdu.setIncomingAndReceive();
-			Util.arrayCopy(buffer, ISO7816.OFFSET_CDATA, m_name, (short) 0, (short) buffer.length);
-			break;
-
-		case INS_SET_NUM_PARTICIPANT:
-			apdu.setIncomingAndReceive();
-			m_num_participant= buffer[ISO7816.OFFSET_CDATA];
-			break;
-		case INS_DECREMENT:
+		case INS_DECREMENT: //ajouter signature à retourner au client python
 			apdu.setIncomingAndReceive();
 			m_credit -= buffer[ISO7816.OFFSET_CDATA];
 			break;
@@ -170,19 +164,4 @@ public class Festival extends Applet {
 		return res;
 	}
 
-	static void print_secret(APDU apdu) throws ISOException {
-
-		byte[] buffer = apdu.getBuffer();
-
-		if (m_pin.isValidated()) {
-
-			Util.arrayCopyNonAtomic(secret, (short) 0, buffer, (short) 0, SECRET_LENGTH);
-			// REMPLACER par une copie atomique
-			apdu.setOutgoingAndSend((short) 0, (short) SECRET_LENGTH);
-			return;
-		}
-
-		ISOException.throwIt(SW_PIN_VERIFICATION_REQUIRED);
-
-	}
 }
