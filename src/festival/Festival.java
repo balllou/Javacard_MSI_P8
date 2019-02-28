@@ -8,7 +8,7 @@ import javacard.framework.Util;
 import javacard.framework.JCSystem;
 import javacard.framework.OwnerPIN;
 
-public class Festival extends java.applet.Applet {
+public class Festival extends Applet {
 
 	public static final byte CLA_MONAPPLET = (byte) 0xB0;
 
@@ -131,7 +131,7 @@ public class Festival extends java.applet.Applet {
 		case INS_GET_INFO_CLIENT:
 			Util.arrayCopy(m_name, (short) 0, buffer, (short) 0, (short) m_name.length);
 			Util.arrayCopy(m_fam_name, (short) 0, buffer, (short) m_name.length, (short) m_fam_name.length);
-			buffer[m_name.length + m_fam_name.length+1]=m_num_participant;
+			buffer[(short)(m_name.length + m_fam_name.length+1)]=m_num_participant;
 			apdu.setOutgoingAndSend((short) 0, (short) (m_name.length + m_fam_name.length + 1));
 			break;
 		case INS_SET_FAM_NAME:
