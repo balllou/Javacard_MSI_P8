@@ -15,11 +15,11 @@ public class Hellow extends Applet {
         public static final byte I_GIVE_U_MY_NAME_U_BITCH = 0x03;
         
         /* Attributs */
-        private byte [] name= {'h','a','h','a'};
+        private byte [] name;
         
         /* Constructeur */
         private Hellow() {
-        //       name = {'h','a','h','a'};
+               this.name = new byte[]{'h','a','h','a'};
         }
  
         public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
