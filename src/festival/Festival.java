@@ -24,7 +24,11 @@ public class Festival extends Applet {
 
 	private static final byte PIN_LENGTH = 0x02;
 	private static final byte PIN_TRY_LIMIT = 0x03;
-	private static final byte SECRET_LENGTH = 0x02;
+	private static final byte FAM_NAME_LENGTH = 0x0C;
+	private static final byte NAME_LENGTH = 0x0C;
+	private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
+	private static final byte SECRET_KEY_LENGTH = 0x20; // a modifier (taille de la clé privée pour signer les échanges de crédits entre les cartes)
+	private static final byte SIGNATURE_LENGTH = 0x08;	// a modifier (taille de la signature des infos du tributaire de la carte)
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	static final short SW_PIN_VERIFICATION_FAILED = 0x6302;
@@ -41,12 +45,15 @@ public class Festival extends Applet {
 	static final byte INS_ECHANGE = 0x09;
 
 	// déclaration des attributs de classe (initialisés dans le constructeur)
-	private static byte[] secret;
+	
+	// private static byte[] secret;
 	private static OwnerPIN m_pin;
 	private static byte[] m_name;
 	private static byte[] m_fam_name;
 	private static byte m_num_participant;
-	private static byte m_credit;
+	private static short m_credit;
+	private static byte [] m_signature;
+	private static byte [] m_secret_key;
 
 	// constructeur
 	private Festival(byte[] bArray, short bOffset, byte bLength)
@@ -54,26 +61,34 @@ public class Festival extends Applet {
 		byte aidLength = bArray[bOffset];
 		short controlLength = (short) (bArray[(short) (bOffset + 1 + aidLength)] & (short) 0x00FF);
 		short dataLength = (short) (bArray[(short) (bOffset + 1 + aidLength + 1 + controlLength)] & (short) 0x00FF);
-
-		if ((byte) dataLength != (byte) (PIN_LENGTH + SECRET_LENGTH)) {
+		
+		//si data envoyé en param + long que pin + fam_name + name + num_participant + secret_key
+		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SECRET_KEY_LENGTH)) {
 			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 		}
-
-		// gp -v --install Festival221.cap --params 0102426f
-
+		//récupération des data passés en paramètres exemple : gp -v --install Festival221.cap --params 0102426f
+		//récupération pin
 		m_pin = new OwnerPIN(PIN_TRY_LIMIT, PIN_LENGTH);
 		m_pin.update(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1), PIN_LENGTH);
 
-		secret = new byte[(short) SECRET_LENGTH];
-		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH), secret,
-				(short) 0, SECRET_LENGTH);
+		//récupération des infos du client et de la signature correspondante
+		//nom de famille
+		m_fam_name= new byte [(short) FAM_NAME_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH ), m_fam_name, (short) 0, FAM_NAME_LENGTH);
+		//prénom
+		m_name=new byte [(short) NAME_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH), m_name, (short) 0, NAME_LENGTH);
+		//numéro de participant
+		m_num_participant=bArray[bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH]; // tester si erreur, si oui passer par un tableau de byte temporaire
+		//signature
+		m_signature=new byte [(short)SIGNATURE_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
+		//récupération de la clé privée pour signer les échanges entre cartes
 
-		m_name = new byte[] { 'j', 'e', 'a', 'n' };
-		m_fam_name = new byte[] { 'b', 'o', 'n' };
-		// m_fam_name=fam_name;
-		// m_name=name;
-		m_num_participant = 0;
-		m_credit = (byte) 500;
+		// m_secret_key=makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
+		m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key, (short) 0, SECRET_KEY_LENGTH);
+		m_credit = (short) 500;
 
 	}
 
