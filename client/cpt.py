@@ -17,3 +17,4 @@ connection.disconnect()
 #mise du compteur à 5
 data, sw1, sw2 = connection.transmit([0xB0,0x03,0x00,0x00,0x01,0x05])
 print('on met le compteur')
+

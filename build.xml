@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project basedir="." default="hellow" name="Hellow build">
+<project basedir="." default="festival" name="Festival build">
   <!-- Applet building dependencies -->
   <property name="JC221" value="../ext/java_card_kit-2_2_1"/>
   <property name="JC222" value="../ext/java_card_kit-2_2_2"/>
@@ -10,13 +10,13 @@
   <!-- ant-javacard task from javacard.pro -->
   <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="../ext/ant-javacard.jar"/>
   <!-- All included applets -->
-  <target name="hellow">
+  <target name="festival">
     <javacard>
-      <cap jckit="${JC221}" output="Hellow221.cap" sources="src/hellow">
-        <applet class="hellow.Hellow" aid="0102030405060708"/>
+      <cap jckit="${JC221}" output="Festival221.cap" sources="src/festival">
+        <applet class="festival.Festival" aid="0102030405060708"/>
       </cap>
-      <cap jckit="${JC222}" output="Hellow222.cap" sources="src/hellow">
-        <applet class="hellow.Hellow" aid="0102030405060708"/>
+      <cap jckit="${JC222}" output="Festival222.cap" sources="src/festival">
+        <applet class="festival.Festival" aid="0102030405060708"/>
       </cap>
       <!-- <cap jckit="${JC303}" output="Empty303.cap" sources="src/testapplets"> -->
       <!--   <applet class="testapplets.Empty" aid="0102030405060708"/> -->

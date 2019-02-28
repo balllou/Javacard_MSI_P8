@@ -10,4 +10,9 @@ authentification : authentifier les cartes qu'on produit
 			authentification du tributaire de la carte (pin)
 
 
-rendu : proposition commerciale
+rendu : proposition commerciale (2 pages max)
+
+1 : le code
+2 : client 1 install/ personnalisation de la carte
+3 : client 2 débit de crédits
+4 : client 3 échange de crédit entre participants
