@@ -5,9 +5,10 @@ from smartcard.System import readers
 from logging.handlers import RotatingFileHandler
 import os
 import logging
-import secrets
 import ecdsa
-
+import random
+logger = logging.getLogger()
+compteurparticipant=0
 
 def hex_to_str(value_hex):
     string_value=bytearray.fromhex(value_hex).decode()
@@ -33,22 +34,31 @@ print(list_int_to_hex(list_in))
 #Ici, on veut tout d'abord faire une install en lancant lacommande d'install de cles en clip avec paramete --param PIN(2octets)Secret(2Octet)
 #Questio: doit on générer des cles (2 octets pas beaucoup) ou secret définit par la personne en caissequi délivre les cartes
 def init_carte(name,surname,pin):
-    namehex=hex(name)+ ""
+    name=name+"global "
+    surname=surglobal name+""
+    namehex=hexglobal (name)+ ""
+    if len(nameglobal hex)<12:
+        while len(namehex) <12:
+            namehex=""+namehex
     surnamehex=hex(surname)+""
-    pinhex=hex(pin) 
-    clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)#Géneration clé secrete 
-    clepublic = clesecrete.get_verifying_key()#Génération clé publique 
-    signdata = clesecrete.sign(b"message")#Exemple signature message
-    clesecrete.verify(signdata, b"message") # True 
-
-
     namehex=hex(name)+ ""
-    surnamehex=hex(surname)+""
+    if len(surnamehex)<12:
+        while len(namehex) <12:
+            surnamehex=""+surnamehex
     pinhex=hex(pin) 
+    message=pinhex+namehex+surnamehex+compteurparticipant
+    clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete 
+    clepublic = clesecrete.get_verifying_key()#Génération clé publique
+    #Stocker la cle publique  
+    signdata = clesecrete.sign(message)#Exemple signature message
+    file_ = open("secret", 'w')
+    file_.write(clepublic)
+    file_.close()
     #ICi ce client devra choisir de locker la carte a la fin 
-    cmd="gp -install blabka.cap --param" +pinhex+generatesecrets
+    cmd="gp -install blabka.cap --param" +pinhex+surnamehex+namehex+compteurparticipant+signdata
+    logger.info("Carte initialisée")
+    compteurparticipant+=1
 
-# import ecdsa
 
 # message = b"message"
 # public_key = '98cedbb266d9fc38e41a169362708e0509e06b3040a5dfff6e08196f8d9e49cebfb4f4cb12aa7ac34b19f3b29a17f4e5464873f151fd699c2524e0b7843eb383'
@@ -78,7 +88,6 @@ def connexion():
     connection.connect()
 #Partie LOG
     # création de l'objet logger qui va nous servir à écrire dans les logs
-    logger = logging.getLogger()
     # on met le niveau du logger à DEBUG, comme ça il écrit tout
     logger.setLevel(logging.DEBUG)
     #logger.setLevel(logging.RELEASE)
@@ -111,7 +120,7 @@ def checkpin(pin):
     #Remplacer par le bon appel et les bon param
     #data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
     if (sw1=="0x90" and sw2=="0x00"):
-        return=list_int_to_hex(data)
+        #return=list_int_to_hex(data)
         print("Connexion établie")
         return True
     else:
@@ -126,15 +135,33 @@ def unlock_card(key):
     cmd="gp -key" +key+ "-unlock"
     returned_value = os.system(cmd)  # returns the exit code in unix
     print('returned value:', returned_value)    
+def generatepin():
+    logger.info("Génération d'un nouveau PIN")
+    pin0=random.randint(0,9)
+    pin1=random.randint(0,9)
+    pin2=random.randint(0,9)
+    pin3=random.randint(0,9)
+    pin=str(pin0)+str(pin1)+str(pin2)+str(pin3)
+    pin=int(pin)
+    logger.info("Nouveau Pin généré")
+    return pin
+
+
+
+
+    
+
+for x in range (10):
+    print(generatepin())
 
 #Main
-#connexion()
-while(true):
-    input=input("Bonjour, veuillez rentrer votre PIN")
-    if input==True:
-        print("Quelle opération....")
-    else:
-        print("Echec du PIN ")
+# #connexion()
+# while(true):
+#     input=input("Bonjour, veuillez rentrer votre PIN")
+#     if input==True:
+#         print("Quelle opération....")
+#     else:
+#         print("Echec du PIN ")
 
 
 
