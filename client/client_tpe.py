@@ -139,5 +139,6 @@ while True:
                     print("Format 4 chiffres du PIN non respécté\n")
                 print("Deconnexion de la carte\n")
                 deconnexion()
-    print("Le montant demandé doit être compris entre 1 et 500 crédits\n")
+    else:
+        print("Le montant demandé doit être compris entre 1 et 500 crédits\n")
 
