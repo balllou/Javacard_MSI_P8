@@ -34,7 +34,7 @@ print(list_int_to_hex(list_in))
 #Ici, on veut tout d'abord faire une install en lancant lacommande d'install de cles en clip avec paramete --param PIN(2octets)Secret(2Octet)
 #Questio: doit on générer des cles (2 octets pas beaucoup) ou secret définit par la personne en caissequi délivre les cartes
 def init_carte(name,surname,pin):
-    name=name+"global "
+    name=name+""
     surname=surglobal name+""
     namehex=hexglobal (name)+ ""
     if len(nameglobal hex)<12:

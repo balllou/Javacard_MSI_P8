@@ -43,15 +43,23 @@ def init_carte(name,surname):
     pin=generatepin()
     print("Voici le PIN du Client:" +pin)
     pinhex=hex(pin) 
-    message=pinhex+namehex+surnamehex+compteurparticipant
-    clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete 
-    clepublic = clesecrete.get_verifying_key()#Génération clé publique  
+    #Génération de la pair de clés ECDSA pour signer les transactions
+    cleprivtrans = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete transaction
+    cleprivtranshex=hex(cleprivtrans)
+    clepubtrans = cleprivtrans.get_verifying_key()#Génération clé publique transaction
+    file_ = open("secretpublictpe", 'w')
+    file_.write(clepubtrans)
+    file_.close() 
+    #Génération de la pair de clés ECDSA pour signer la carte
+    clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete carte
+    clepublic = clesecrete.get_verifying_key()#Génération clé publique carte  
+    message=namehex+surnamehex+compteurparticipant #données a signer
     signdata = clesecrete.sign(message)#Exemple signature message
     print("Secret:"+ signdata)
-    file_ = open("secret", 'w')
+    file_ = open("secretpubliccarte", 'w')
     file_.write(clepublic)
     file_.close() 
-    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteurparticipant+signdata ])
+    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteurparticipant+cleprivtranshex+signdata ])
     if reponse.startswith("No smart"):
         logger.info("Fournisseur de carte--- Echec d'initialisation de la carte")
         return False
