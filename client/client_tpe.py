@@ -115,7 +115,7 @@ def checkpin(pin):
 
 while True:
     montant=input("Bonjour veuillez rentrer le crédit à prelever\n")
-    if montant>str(0) and montant<=str(500): 
+    if montant>"0" and montant<="500": 
         r=readers()
         if r==[]:
             if affiche==0:
