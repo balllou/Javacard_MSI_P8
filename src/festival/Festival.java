@@ -10,6 +10,8 @@ import javacard.framework.OwnerPIN;
 import java.security.PrivateKey;
 import java.security.Signature;
 import java.security.KeyFactory;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 public class Festival extends Applet {
 
@@ -49,7 +51,8 @@ public class Festival extends Applet {
 	private static byte m_num_participant;
 	private static short m_credit;
 	private static byte [] m_signature;
-	private static byte [] m_secret_key;
+	private static byte [] m_secret_key_byte;
+	private static PrivateKey m_secret_key;
 
 
 	// constructeur
@@ -82,9 +85,12 @@ public class Festival extends Applet {
 		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
 		//récupération de la clé privée pour signer les échanges entre cartes
 
-		m_secret_key=JCSystem.makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
+		m_secret_key_byte=JCSystem.makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
 		// m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
-		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key, (short) 0, SECRET_KEY_LENGTH);
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key_byte, (short) 0, SECRET_KEY_LENGTH);
+		KeyFactory kf = KeyFactory.getInstance("EC");
+		m_secret_key = kf.generatePrivate(new PKCS8EncodedKeySpec(m_secret_key_byte)) ;
+		//crédits
 		m_credit = (short) 500;
 
 	}

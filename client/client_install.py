@@ -38,6 +38,7 @@ def init_carte(name,surname):
     namehex=hex(name)
     while len(surnamehex) <12:
         surnamehex="0"+surnamehex
+    compteur_participant_hex=hex(compteurparticipant)
     pin=generatepin()
     print("Voici le PIN du Client:" +pin)
     pinhex=hex(pin) 
@@ -57,7 +58,7 @@ def init_carte(name,surname):
     file_ = open("secretpubliccarte", 'w')
     file_.write(clepublic +"\n")
     file_.close() 
-    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteurparticipant+cleprivtranshex+signdata ])
+    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteur_participant_hex+signdata+cleprivtranshex ])
     if reponse.startswith("No smart"):
         logger.info("Fournisseur de carte--- Echec d'initialisation de la carte")
         return False
