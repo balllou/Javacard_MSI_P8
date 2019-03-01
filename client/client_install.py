@@ -31,15 +31,13 @@ def init_carte(name,surname):
     global compteurparticipant,logger 
     name=name+" "
     surname=surname+" "
+    namehex=name.encode("UTF-8").hex()
+    while len(namehex) <12:
+        namehex="0"+namehex
+    surnamehex=surname.encode("UTF-8").hex()
     namehex=hex(name)
-    if len(namehex)<12:
-        while len(namehex) <12:
-            namehex=""+namehex
-    surnamehex=hex(surname)
-    namehex=hex(name)
-    if len(surnamehex)<12:
-        while len(namehex) <12:
-            surnamehex=""+surnamehex
+    while len(surnamehex) <12:
+        surnamehex="0"+surnamehex
     pin=generatepin()
     print("Voici le PIN du Client:" +pin)
     pinhex=hex(pin) 
@@ -48,7 +46,7 @@ def init_carte(name,surname):
     cleprivtranshex=hex(cleprivtrans)
     clepubtrans = cleprivtrans.get_verifying_key()#Génération clé publique transaction
     file_ = open("secretpublictpe", 'w')
-    file_.write(clepubtrans)
+    file_.write(clepubtrans+"\n")
     file_.close() 
     #Génération de la pair de clés ECDSA pour signer la carte
     clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete carte
@@ -57,7 +55,7 @@ def init_carte(name,surname):
     signdata = clesecrete.sign(message)#Exemple signature message
     print("Secret:"+ signdata)
     file_ = open("secretpubliccarte", 'w')
-    file_.write(clepublic)
+    file_.write(clepublic +"\n")
     file_.close() 
     reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteurparticipant+cleprivtranshex+signdata ])
     if reponse.startswith("No smart"):
