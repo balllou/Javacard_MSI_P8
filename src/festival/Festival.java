@@ -7,6 +7,11 @@ import javacard.framework.ISOException;
 import javacard.framework.Util;
 import javacard.framework.JCSystem;
 import javacard.framework.OwnerPIN;
+import java.security.PrivateKey;
+import java.security.Signature;
+import java.security.KeyFactory;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
 
 public class Festival extends Applet {
 
@@ -15,12 +20,11 @@ public class Festival extends Applet {
 	// commandes
 
 	static final byte INS_CHECK_PIN = 0x00;
-	static final byte INS_PRINT_SECRET = 0x01;
 	static final byte INS_UPDATE_PIN = 0x02;
 	static final byte INS_DEBUG = 0x03;
 	static final byte INS_GET_INFO_CLIENT = 0x07;
 	static final byte INS_DECREMENT = 0x08;
-	static final byte INS_ECHANGE = 0x09;
+	static final byte INS_ECHANGE_CREDIT = 0x09;
 	
 	//debug
 	private byte[] MESS_DEBUG = { 'D', 'e', 'B', 'U', 'G', ' ' };
@@ -36,6 +40,7 @@ public class Festival extends Applet {
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	static final short SW_PIN_VERIFICATION_FAILED = 0x6302;
+	static final short SW_CREDIT_INSUFFISANT =0x6363;
 
 
 	// attributs (initialisés dans le constructeur)
@@ -46,7 +51,9 @@ public class Festival extends Applet {
 	private static byte m_num_participant;
 	private static short m_credit;
 	private static byte [] m_signature;
-	private static byte [] m_secret_key;
+	private static byte [] m_secret_key_byte;
+	private static PrivateKey m_secret_key;
+
 
 	// constructeur
 	private Festival(byte[] bArray, short bOffset, byte bLength)
@@ -78,9 +85,12 @@ public class Festival extends Applet {
 		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
 		//récupération de la clé privée pour signer les échanges entre cartes
 
-		// m_secret_key=makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
-		m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
-		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key, (short) 0, SECRET_KEY_LENGTH);
+		m_secret_key_byte=JCSystem.makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
+		// m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key_byte, (short) 0, SECRET_KEY_LENGTH);
+		KeyFactory kf = KeyFactory.getInstance("EC");
+		m_secret_key = kf.generatePrivate(new PKCS8EncodedKeySpec(m_secret_key_byte)) ;
+		//crédits
 		m_credit = (short) 500;
 
 	}
@@ -131,21 +141,33 @@ public class Festival extends Applet {
 			ISOException.throwIt(SW_PIN_VERIFICATION_FAILED);
 			break;
 
-		// case INS_PRINT_SECRET:
-
-		// 	print_secret(apdu);
-		// 	break;
-
 		case INS_GET_INFO_CLIENT:
 			Util.arrayCopy(m_name, (short) 0, buffer, (short) 0, (short) m_name.length);
 			Util.arrayCopy(m_fam_name, (short) 0, buffer, (short) m_name.length, (short) m_fam_name.length);
 			buffer[(short)(m_name.length + m_fam_name.length+1)]=m_num_participant;
 			apdu.setOutgoingAndSend((short) 0, (short) (m_name.length + m_fam_name.length + 1));
 			break;
+
 		case INS_DECREMENT: //ajouter signature à retourner au client python
 			apdu.setIncomingAndReceive();
-			m_credit -= buffer[ISO7816.OFFSET_CDATA];
+			byte temp =buffer[ISO7816.OFFSET_CDATA];
+			if(m_credit-temp<=0){
+				Util.arrayCopy(SW_CREDIT_INSUFFISANT,(short)0,buffer,(short)0,(short)1);
+			
+			}else{
+				m_credit -= temp;
+				//signature du nouveau montant sur la carte et du numéro de participant
+				//récupération de la clé privée
+
+				//envoi des infos signées au client TPE
+			}			
 			break;
+
+		case INS_ECHANGE_CREDIT:
+
+
+		break;
+
 		default:
 			ISOException.throwIt(ISO7816.SW_INS_NOT_SUPPORTED);
 		}

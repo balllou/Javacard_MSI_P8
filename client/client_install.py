@@ -29,17 +29,16 @@ def list_int_to_hex(list_in):
 
 def init_carte(name,surname):
     global compteurparticipant,logger 
-    name=name+""
-    surname=surname+""
-    namehex=hex(name)+ ""
-    if len(namehex)<12:
-        while len(namehex) <12:
-            namehex=""+namehex
-    surnamehex=hex(surname)+""
-    namehex=hex(name)+ ""
-    if len(surnamehex)<12:
-        while len(namehex) <12:
-            surnamehex=""+surnamehex
+    name=name+" "
+    surname=surname+" "
+    namehex=name.encode("UTF-8").hex()
+    while len(namehex) <12:
+        namehex="0"+namehex
+    surnamehex=surname.encode("UTF-8").hex()
+    namehex=hex(name)
+    while len(surnamehex) <12:
+        surnamehex="0"+surnamehex
+    compteur_participant_hex=hex(compteurparticipant)
     pin=generatepin()
     print("Voici le PIN du Client:" +pin)
     pinhex=hex(pin) 
@@ -48,7 +47,11 @@ def init_carte(name,surname):
     cleprivtranshex=hex(cleprivtrans)
     clepubtrans = cleprivtrans.get_verifying_key()#Génération clé publique transaction
     file_ = open("secretpublictpe", 'w')
+<<<<<<< HEAD
     file_.write(clepubtrans +"\n")
+=======
+    file_.write(clepubtrans+"\n")
+>>>>>>> 6d1e85f5bb0a92772fba79d5077e06968123e9b4
     file_.close() 
     #Génération de la pair de clés ECDSA pour signer la carte
     clesecrete = ecdsa.SigningKey.generate(curve=ecdsa.SECP256k1)  #Géneration clé secrete carte
@@ -57,9 +60,13 @@ def init_carte(name,surname):
     signdata = clesecrete.sign(message)#Exemple signature message
     print("Secret:"+ signdata)
     file_ = open("secretpubliccarte", 'w')
+<<<<<<< HEAD
     file_.write(clepublic+"\n")
+=======
+    file_.write(clepublic +"\n")
+>>>>>>> 6d1e85f5bb0a92772fba79d5077e06968123e9b4
     file_.close() 
-    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteurparticipant+cleprivtranshex+signdata ])
+    reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteur_participant_hex+signdata+cleprivtranshex ])
     if reponse.startswith("No smart"):
         logger.DEBUG("Fournisseur de carte--- Echec d'initialisation de la carte")
         return False
