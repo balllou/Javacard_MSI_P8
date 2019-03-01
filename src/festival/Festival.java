@@ -48,10 +48,9 @@ public class Festival extends Applet {
 	private static OwnerPIN m_pin;
 	private static byte[] m_name;
 	private static byte[] m_fam_name;
-	private static byte m_num_participant;
+	private static byte [] m_num_participant;
 	private static short m_credit;
 	private static byte [] m_signature;
-	private static byte [] m_secret_key_byte;
 	private static PrivateKey m_secret_key;
 
 
@@ -79,13 +78,14 @@ public class Festival extends Applet {
 		m_name=new byte [(short) NAME_LENGTH];
 		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH), m_name, (short) 0, NAME_LENGTH);
 		//numéro de participant
-		m_num_participant=bArray[(short)(bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH)]; // tester si erreur, si oui passer par un tableau de byte temporaire
+		m_num_participant = new byte [(short)NUM_PARTICIPANT_LENGTH];
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH), m_num_participant, (short) 0, NUM_PARTICIPANT_LENGTH);
 		//signature
 		m_signature=new byte [(short)SIGNATURE_LENGTH];
-		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
+		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
 		//récupération de la clé privée pour signer les échanges entre cartes
 
-		m_secret_key_byte=JCSystem.makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
+		byte [] m_secret_key_byte=JCSystem.makeTransientByteArray((short)SECRET_KEY_LENGTH,JCSystem.CLEAR_ON_RESET); //CLEAR_ON_DESELECT ou CLEAR_ON_RESET voir si le type transient
 		// m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
 		Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key_byte, (short) 0, SECRET_KEY_LENGTH);
 		KeyFactory kf = KeyFactory.getInstance("EC");
@@ -144,22 +144,32 @@ public class Festival extends Applet {
 		case INS_GET_INFO_CLIENT:
 			Util.arrayCopy(m_name, (short) 0, buffer, (short) 0, (short) m_name.length);
 			Util.arrayCopy(m_fam_name, (short) 0, buffer, (short) m_name.length, (short) m_fam_name.length);
-			buffer[(short)(m_name.length + m_fam_name.length+1)]=m_num_participant;
+			Util.arrayCopy(m_num_participant, (short) 0, buffer, (short) (m_name.length + m_fam_name.length), (short) m_num_participant.length);
 			apdu.setOutgoingAndSend((short) 0, (short) (m_name.length + m_fam_name.length + 1));
 			break;
 
 		case INS_DECREMENT: //ajouter signature à retourner au client python
 			apdu.setIncomingAndReceive();
-			byte temp =buffer[ISO7816.OFFSET_CDATA];
+			byte temp = buffer[ISO7816.OFFSET_CDATA];
 			if(m_credit-temp<=0){
 				Util.arrayCopy(SW_CREDIT_INSUFFISANT,(short)0,buffer,(short)0,(short)1);
 			
 			}else{
 				m_credit -= temp;
 				//signature du nouveau montant sur la carte et du numéro de participant
-				//récupération de la clé privée
-
+				//récupération de la clé privée et création d'une signature
+				Signature ecdsa = Signature.getInstance("SHA1withECDSA");
+				ecdsa.initSign(m_secret_key);
+				byte [] str_to_sign = new byte [(short)(NUM_PARTICIPANT_LENGTH + 2 + SIGNATURE_LENGTH)];
+				Util.arrayCopy(m_num_participant,(short)0,str_to_sign,(short)0,(short)NUM_PARTICIPANT_LENGTH);
+				// decoupage de m_credit en 2 byte (m_credit = short)
+				str_to_sign[NUM_PARTICIPANT_LENGTH+1] = (byte) (m_credit & 0xFF);
+				str_to_sign[NUM_PARTICIPANT_LENGTH+2] = (byte) ((m_credit>>8) & 0xFF);
+				ecdsa.update(str_to_sign);
+				byte [] sign = ecdsa.sign();
 				//envoi des infos signées au client TPE
+				Util.arrayCopy(str_to_sign,(short)0,buffer,(short)0,(short)str_to_sign.length);
+				apdu.setOutgoingAndSend((short) 0, (short) str_to_sign.length);
 			}			
 			break;
 
