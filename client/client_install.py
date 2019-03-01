@@ -29,14 +29,14 @@ def list_int_to_hex(list_in):
 
 def init_carte(name,surname):
     global compteurparticipant,logger 
-    name=name+""
-    surname=surname+""
-    namehex=hex(name)+ ""
+    name=name+" "
+    surname=surname+" "
+    namehex=hex(name)
     if len(namehex)<12:
         while len(namehex) <12:
             namehex=""+namehex
-    surnamehex=hex(surname)+""
-    namehex=hex(name)+ ""
+    surnamehex=hex(surname)
+    namehex=hex(name)
     if len(surnamehex)<12:
         while len(namehex) <12:
             surnamehex=""+surnamehex
