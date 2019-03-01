@@ -151,8 +151,7 @@ def generatepin():
 
     
 
-for x in range (10):
-    print(generatepin())
+
 
 #Main
 # #connexion()
