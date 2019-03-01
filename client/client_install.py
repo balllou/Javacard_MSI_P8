@@ -60,10 +60,10 @@ def init_carte(name,surname):
     file_.close() 
     reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install', 'Festival221.cap', '--param',pinhex+surnamehex+namehex+compteur_participant_hex+signdata+cleprivtranshex ])
     if reponse.startswith("No smart"):
-        logger.info("Fournisseur de carte--- Echec d'initialisation de la carte")
+        logger.DEBUG("Fournisseur de carte--- Echec d'initialisation de la carte")
         return False
     else:
-        logger.info("Fournisseur de carte--- Carte initialisée")
+        logger.DEBUG("Fournisseur de carte--- Carte initialisée")
         compteurparticipant+=1
         return signdata
 
@@ -73,48 +73,48 @@ def connexion(r):
     global logger
     connection=r[0].createConnection()
     connection.connect()
-    logger.info("Fournisseur de carte--- Connexion sur la carte")
+    logger.DEBUG("Fournisseur de carte--- Connexion sur la carte")
     logger.setLevel(logging.DEBUG)
     #logger.setLevel(logging.RELEASE)
     formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
-    file_handler = RotatingFileHandler('activity.log', 'a', 1000000, 1)
+    file_handler = RotatingFileHandler('installation.log', 'a', 1000000, 1)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)  
-    logger.info("Fournisseur de carte --- Connexion de la carte")
+    logger.DEBUG("Fournisseur de carte --- Connexion de la carte")
 
 
 def deconnexion():
     global logger 
-    logger.info("Fournisseur de carte --- Déconnexion de la carte")
+    logger.DEBUG("Fournisseur de carte --- Déconnexion de la carte")
     connection.disconnect()
 
 
 
 def lock_cart(key):
     global  verr,logger
-    logger.info("Fournisseur de carte --- Demande de vérouillage de la carte")
+    logger.DEBUG("Fournisseur de carte --- Demande de vérouillage de la carte")
     reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-lock', key])
     print('returned value:', reponse)
     verr=True
 
 def unlock_card(key):
     global verr,logger
-    logger.info("Fournisseur de carte --- Demande de dévérouillage de la carte")
+    logger.DEBUG("Fournisseur de carte --- Demande de dévérouillage de la carte")
     reponse=subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-key', key, '-unlock'])
     print('returned value:', reponse)  
     verr=False  
 
 def generatepin():
     global logger
-    logger.info("Fournisseur de carte--- Génération d'un nouveau PIN")
+    logger.DEBUG("Fournisseur de carte--- Génération d'un nouveau PIN")
     pin0=random.randint(0,9)
     pin1=random.randint(0,9)
     pin2=random.randint(0,9)
     pin3=random.randint(0,9)
     pin=str(pin0)+str(pin1)+str(pin2)+str(pin3)
     pin=int(pin)
-    logger.info("Fournisseur de carte--- Nouveau Pin généré")
+    logger.DEBUG("Fournisseur de carte--- Nouveau Pin généré")
     return pin
 
 
