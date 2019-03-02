@@ -6,18 +6,25 @@
   <property name="JC303" value="../ext/java_card_kit-3_0_3"/>
   <property name="OP20" value="../ext/visa_openplatform-2_0"/>
   <property name="GP211" value="../ext/globalplatform-2_1_1"/>
+  <property name ="JC304" value="../ext/jc304_kit"/> 
   
   <!-- ant-javacard task from javacard.pro -->
   <taskdef name="javacard" classname="pro.javacard.ant.JavaCard" classpath="../ext/ant-javacard.jar"/>
   <!-- All included applets -->
   <target name="festival">
     <javacard>
+      <!--
       <cap jckit="${JC221}" output="Festival221.cap" sources="src/festival">
         <applet class="festival.Festival" aid="0102030405060708"/>
       </cap>
       <cap jckit="${JC222}" output="Festival222.cap" sources="src/festival">
         <applet class="festival.Festival" aid="0102030405060708"/>
       </cap>
+      -->
+      <cap jckit="${JC304}" output="Festival304.cap" sources="src/festival">
+        <applet class="festival.Festival" aid="0102030405060708"/>
+      </cap>
+      
       <!-- <cap jckit="${JC303}" output="Empty303.cap" sources="src/testapplets"> -->
       <!--   <applet class="testapplets.Empty" aid="0102030405060708"/> -->
       <!-- </cap> -->

@@ -1,5 +1,6 @@
 package festival;
 
+
 import javacard.framework.APDU;
 import javacard.framework.Applet;
 import javacard.framework.ISO7816;
@@ -8,6 +9,10 @@ import javacard.framework.Util;
 import javacard.framework.JCSystem;
 import javacard.framework.OwnerPIN;
 
+import javacard.security.ECPrivateKey;
+import javacard.security.ECPublicKey;
+import javacard.security.KeyBuilder;
+import javacardx.crypto.*;
 import javacard.security.*;
 
 
@@ -18,6 +23,7 @@ public class Festival extends Applet {
 	// commandes
 
 	static final byte INS_CHECK_PIN = 0x00;
+	static final byte INS_GET_PUB = 0x01;
 	static final byte INS_UPDATE_PIN = 0x02;
 	static final byte INS_DEBUG = 0x03;
 	static final byte INS_GET_INFO_CLIENT = 0x07;
@@ -33,7 +39,6 @@ public class Festival extends Applet {
 	private static final byte FAM_NAME_LENGTH = 0x0C;
 	private static final byte NAME_LENGTH = 0x0C;
 	private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
-	private static final byte SECRET_KEY_LENGTH = 0x20; // 256 bit
 	private static final byte SIGNATURE_LENGTH = 0x08; // 64 bit
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
@@ -48,7 +53,16 @@ public class Festival extends Applet {
 	private static byte[] m_num_participant;
 	private static short m_credit;
 	private static byte[] m_signature;
-	private static ECPrivateKey m_secret_key;
+	private static PrivateKey m_secret_key;
+	private static PublicKey m_public_key;
+
+	private byte [] tempBuffer;
+	private byte [] flags;
+	private static final short FLAGS_SIZE = (short) 5;
+
+	private short eccKeyLen;
+	private Signature ecdsa;
+	private KeyPair eccKey;
 
 	// constructeur
 	private Festival(byte[] bArray, short bOffset, byte bLength) throws ISOException {
@@ -58,8 +72,7 @@ public class Festival extends Applet {
 
 		// si data envoyé en param + long que pin + fam_name + name + num_participant +
 		// secret_key
-		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH
-				+ SECRET_KEY_LENGTH)) {
+		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH)) {
 			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 		}
 		// récupération des data passés en paramètres exemple : gp -v --install
@@ -89,15 +102,21 @@ public class Festival extends Applet {
 				+ FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH), m_signature, (short) 0, SIGNATURE_LENGTH);
 		// création du couple clé privée/publique pour signer les transactions
 
-		m_secret_key = (ECPrivateKey)KeyBuilder.buildKey(KeyBuilder.TYPE_EC_FP_PRIVATE,KeyBuilder.LENGTH_EC_FP_192,true);
+			//création des variables de stockage temporaires
+		tempBuffer = JCSystem.makeTransientByteArray((short)256,JCSystem.CLEAR_ON_DESELECT);
+		flags = JCSystem.makeTransientByteArray(FLAGS_SIZE, JCSystem.CLEAR_ON_RESET);
 
-		ECPublicKey m_pub_key = (ECPublicKey)KeyBuilder.buildKey(KeyBuilder.TYPE_EC_FP_PUBLIC,KeyBuilder.LENGTH_EC_FP_192,true);
+			//instance ECC(ALG_ECDSA_SHA)
+		ecdsa = Signature.getInstance(Signature.ALG_ECDSA_SHA, false);
 
-		
+		JCSystem.requestObjectDeletion();
 
+		eccKey = new KeyPair(KeyPair.ALG_EC_FP,javacard.security.KeyBuilder.LENGTH_EC_FP_256);
+		eccKeyLen = (short) 32;
+		eccKey.genKeyPair();
+		m_secret_key = eccKey.getPrivate();
 
-
-
+		m_public_key = eccKey.getPublic();
 
 
 		// byte[] m_secret_key_byte = JCSystem.makeTransientByteArray((short) SECRET_KEY_LENGTH, JCSystem.CLEAR_ON_RESET);																														
@@ -185,30 +204,34 @@ public class Festival extends Applet {
 				// Util.arrayCopy(SW_CREDIT_INSUFFISANT,(short)0,buffer,(short)0,(short)1);
 				buffer[0] = (byte) (SW_CREDIT_INSUFFISANT & 0xFF);
 				buffer[1] = (byte) ((SW_CREDIT_INSUFFISANT >> 8) & 0xFF);
+				apdu.setOutgoingAndSend((short) 0, (short)2);
 
 			} else {
 				m_credit -= temp;
 				// signature du nouveau montant sur la carte et du numéro de participant
 				// récupération de la clé privée et création d'une signature
 				byte[] str_to_sign = new byte[(short) (NUM_PARTICIPANT_LENGTH + 2 + SIGNATURE_LENGTH)];
-				// try {
-				// 	Signature ecdsa = Signature.getInstance("SHA1withECDSA");
-				// 	ecdsa.initSign(m_secret_key);
-				// 	Util.arrayCopy(m_num_participant, (short) 0, str_to_sign, (short) 0,
-				// 			(short) NUM_PARTICIPANT_LENGTH);
-				// 	// decoupage de m_credit en 2 byte (m_credit = short)
-				// 	str_to_sign[(short)(NUM_PARTICIPANT_LENGTH + 1)] = (byte) (m_credit & 0xFF);
-				// 	str_to_sign[(short)(NUM_PARTICIPANT_LENGTH + 2)] = (byte) ((m_credit >> 8) & 0xFF);
-				// 	ecdsa.update(str_to_sign);
-				// 	byte[] sign = ecdsa.sign();
-				// } catch (Exception e) {
-				// 	// TODO: handle exception
-				// }
+				Util.arrayCopy(m_num_participant,(short)0,str_to_sign,(short)0,NUM_PARTICIPANT_LENGTH);
+				str_to_sign[(short)(NUM_PARTICIPANT_LENGTH+1)] = (byte)(m_credit & 0xFF);
+				str_to_sign[(short)(NUM_PARTICIPANT_LENGTH+2)] = (byte)((m_credit>>8) & 0xFF);
+	
+				ecdsa.init(m_secret_key,Signature.MODE_SIGN);
+				ecdsa.sign(str_to_sign,(short) 0, (short)str_to_sign.length,buffer,(short)(NUM_PARTICIPANT_LENGTH + 3 ));
+				apdu.setOutgoingAndSend((short) 0, (short)(NUM_PARTICIPANT_LENGTH + 2 + SIGNATURE_LENGTH));
 
 				// envoi des infos signées au client TPE
 				Util.arrayCopy(str_to_sign, (short) 0, buffer, (short) 0, (short) str_to_sign.length);
 				apdu.setOutgoingAndSend((short) 0, (short) str_to_sign.length);
 			}
+			break;
+
+			case INS_GET_PUB:
+
+			ECPublicKey ECkey_to_send = (ECPublicKey)m_public_key;
+			byte [] key_to_send= new byte[(short)64];
+			ECkey_to_send.getW(key_to_send,(short)0);
+			
+			apdu.setOutgoingAndSend((short) 0,(short)64);
 			break;
 
 		case INS_ECHANGE_CREDIT:
