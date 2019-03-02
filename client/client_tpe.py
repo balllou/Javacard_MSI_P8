@@ -47,7 +47,7 @@ def decrement_credit(value):
     print("Demande de payement d'une valeur de "+value +"en cours...\n")
     hexvalue=hex(value)
     #Remplacer par le bon appel et les bon param
-    data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
+    data, sw1, sw2 = connection.transmit([[0xB0,0x01,0x00,0x00,hexvalue ,0x00,0x7F]
     fichier = open("secretpublictpe", "r")
     publickey= fichier.readline()#numparti,montantactuel;signature
     for publickey in fichier:
@@ -82,7 +82,7 @@ def checkpin(pin):
     print("Vérification du code PIN en cours....\n")
     pinvalue=hex(pin)
     #Remplacer par le bon appel et les bon param
-    data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
+    data, sw1, sw2 = connection.transmit([0xB0,0x00,0x00,0x00, pinvalue])
     fichier = open("secretpubliccarte", "r")
     for publickey in fichier:
     #Verification d'authentification
