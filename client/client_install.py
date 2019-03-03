@@ -8,6 +8,7 @@ import logging
 import ecdsa
 import random
 import subprocess
+import binascii
 
 compteurparticipant = 0
 verr = False
@@ -34,26 +35,21 @@ def init_carte(name, surname):
     name = name+" "
     surname = surname+" "
     namehex = name.encode("UTF-8").hex()
-    while len(namehex) < 12:
-        namehex = "0"+namehex
+    while len(namehex) < 24:
+        namehex = "0" + namehex
+
     surnamehex = surname.encode("UTF-8").hex()
-    namehex = name.encode("UTF-8").hex()
-    while len(surnamehex) < 12:
+    while len(surnamehex) < 24:
         surnamehex = "0"+surnamehex
-    compteur_participant_hex = hex(compteurparticipant)
+
+    compteur_participant_hex = "{:x}".format(compteurparticipant)
+    while len(compteur_participant_hex) < 10:
+        compteur_participant_hex = "0" + compteur_participant_hex
     pin = generatepin()
     print("Voici le PIN du Client: " + str(pin))
-    pinhex = hex(pin)
-    # Génération de la pair de clés ECDSA pour signer les transactions
-    cleprivtrans = ecdsa.SigningKey.generate(
-        curve=ecdsa.SECP256k1)  # Géneration clé secrete transaction
-    cleprivtrans_string = (cleprivtrans.to_string()).hex()
-    # Génération clé publique transaction
-    clepubtrans = cleprivtrans.get_verifying_key()
-    clepubtrans_string = (cleprivtrans.to_string()).hex()
-    file_ = open("secretpublictpe", 'w')
-    file_.write(clepubtrans_string+"\n")
-    file_.close()
+    pinhex = "{:x}".format(pin)
+    while len(str(pinhex)) < 4:
+        pinhex="0"+pinhex
     # Génération de la pair de clés ECDSA pour signer la carte
     clesecrete = ecdsa.SigningKey.generate(
         curve=ecdsa.SECP256k1)  # Géneration clé secrete carte
@@ -66,8 +62,18 @@ def init_carte(name, surname):
     file_ = open("secretpubliccarte", 'w')
     file_.write(clepubcarte_string + "\n")
     file_.close()
+    print("pinhex : " + str(pinhex))
+    print ("surnamehex : " + surnamehex)
+    print ("namehex : " + namehex)
+    print ("num participant hex : "+ compteur_participant_hex)
+    print ("signature : " + str(binascii.hexlify(signdata)))
+    print (len(str(binascii.hexlify(signdata))))
+    print(len(pinhex+surnamehex+namehex+compteur_participant_hex+str(binascii.hexlify(signdata))))
+
     reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
-                                       'Festival304.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+str(signdata)+cleprivtrans_string])
+                                       '../Festival304.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+str(binascii.hexlify(signdata))])
+    
+    
     if reponse.startswith("No smart"):
         logger.DEBUG(
             "Fournisseur de carte--- Echec d'initialisation de la carte")
