@@ -62,16 +62,11 @@ def init_carte(name, surname):
     file_ = open("secretpubliccarte", 'w')
     file_.write(clepubcarte_string + "\n")
     file_.close()
-    print("pinhex : " + str(pinhex))
-    print ("surnamehex : " + surnamehex)
-    print ("namehex : " + namehex)
-    print ("num participant hex : "+ compteur_participant_hex)
-    print ("signature : " + str(binascii.hexlify(signdata)))
-    print (len(str(binascii.hexlify(signdata))))
-    print(len(pinhex+surnamehex+namehex+compteur_participant_hex+str(binascii.hexlify(signdata))))
 
+    hex_sign=str(binascii.hexlify(signdata))[2:130]
+    print(len(hex_sign+pinhex+surnamehex+namehex+compteur_participant_hex))
     reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
-                                       '../Festival304.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+str(binascii.hexlify(signdata))])
+                                       '../Festival304.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
     
     
     if reponse.startswith("No smart"):

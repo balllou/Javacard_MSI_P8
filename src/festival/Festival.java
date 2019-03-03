@@ -34,12 +34,12 @@ public class Festival extends Applet {
 	private byte[] MESS_DEBUG = { 'D', 'e', 'B', 'U', 'G', ' ' };
 
 	// tailles pour la chaine hex en paramètre d'install
-	private static final byte PIN_LENGTH = 0x02;
+	private static final byte PIN_LENGTH = 0x04;
 	private static final byte PIN_TRY_LIMIT = 0x03;
-	private static final byte FAM_NAME_LENGTH = 0x0C;
-	private static final byte NAME_LENGTH = 0x0C;
-	private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
-	private static final byte SIGNATURE_LENGTH = 0x08; // 64 bit
+	private static final byte FAM_NAME_LENGTH = 0x18;
+	private static final byte NAME_LENGTH = 0x18;
+	private static final byte NUM_PARTICIPANT_LENGTH = 0x0A;
+	private static final short SIGNATURE_LENGTH = 0x80; // 64 bit
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	static final short SW_PIN_VERIFICATION_FAILED = 0x6302;
@@ -70,13 +70,11 @@ public class Festival extends Applet {
 		short controlLength = (short) (bArray[(short) (bOffset + 1 + aidLength)] & (short) 0x00FF);
 		short dataLength = (short) (bArray[(short) (bOffset + 1 + aidLength + 1 + controlLength)] & (short) 0x00FF);
 
-		// si data envoyé en param + long que pin + fam_name + name + num_participant +
-		// secret_key
-		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH)) {
+		if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH)) {
 			ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
 		}
-		// récupération des data passés en paramètres exemple : gp -v --install
-		// Festival221.cap --params 0102426f
+		// récupération des data passés en paramètres 
+		// exemple : gp -v --install Festival221.cap --params 0102426f
 		// récupération pin
 		m_pin = new OwnerPIN(PIN_TRY_LIMIT, PIN_LENGTH);
 		m_pin.update(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1), PIN_LENGTH);
