@@ -9,6 +9,7 @@ import ecdsa
 import random
 import subprocess
 import binascii
+import sys
 
 compteurparticipant = 0
 verr = False
@@ -47,12 +48,12 @@ def init_carte(name, surname):
         compteur_participant_hex = "0" + compteur_participant_hex
     pin = generatepin()
     print("Voici le PIN du Client: " + str(pin))
-    pinhex = "{:x}".format(pin)
+    pinhex = "{:x}".format((int)(pin[:2]))+ "{:x}".format((int)(pin[2:]))
     while len(str(pinhex)) < 4:
         pinhex="0"+pinhex
     # Génération de la pair de clés ECDSA pour signer la carte
     clesecrete = ecdsa.SigningKey.generate(
-        curve=ecdsa.NIST192p)  # Géneration clé secrete carte
+        curve=ecdsa.NIST256p)  # Géneration clé secrete carte
     clesecrete_string = (clesecrete.to_string()).hex()
     clepublic = clesecrete.get_verifying_key()  # Génération clé publique carte
     clepubcarte_string = (clepublic.to_string()).hex()
@@ -63,22 +64,28 @@ def init_carte(name, surname):
     file_.write(clepubcarte_string + "\n")
     file_.close()
 
-    
+   
 
     hex_sign=str(binascii.hexlify(signdata))[2:130]
-    print(len(hex_sign+pinhex+surnamehex+namehex+compteur_participant_hex))
-    reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
-                                       '../Festival221.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
-    
-    
-    if reponse.startswith("No smart"):
-        logger.DEBUG(
-            "Fournisseur de carte--- Echec d'initialisation de la carte")
-        return False
-    else:
-        logger.DEBUG("Fournisseur de carte--- Carte initialisée")
-        compteurparticipant += 1
-        return signdata
+    print(len(pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign))
+    # reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
+    #                                    '../Festival221.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
+    print(pinhex)
+    print (len(surnamehex))
+    print(len(namehex))
+    print(len(compteur_participant_hex))
+    print(len(hex_sign))
+    command = 'java -jar /home/grs/JavaCard/GlobalPlatformPro/gp.jar --install ../Javacard_MSI_P8/Festival221.cap --param '+pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign
+    print(command)
+    os.system(command)
+    # if reponse.startswith("No smart"):
+    #     logger.DEBUG(
+    #         "Fournisseur de carte--- Echec d'initialisation de la carte")
+    #     return False
+    # else:
+    #     logger.DEBUG("Fournisseur de carte--- Carte initialisée")
+    #     compteurparticipant += 1
+    #     return signdata
 
 
 def connexion(r):
@@ -95,12 +102,14 @@ def connexion(r):
     file_handler.setFormatter(formatter)
     logger.addHandler(file_handler)
     logger.debug("Fournisseur de carte --- Connexion de la carte")
+    return connection
 
 
-def deconnexion():
+def deconnexion(connection):
     global logger
-    logger.DEBUG("Fournisseur de carte --- Déconnexion de la carte")
+    logger.debug("Fournisseur de carte --- Déconnexion de la carte")
     connection.disconnect()
+    
 
 
 def lock_cart(key):
@@ -130,7 +139,6 @@ def generatepin():
     pin2 = random.randint(0, 9)
     pin3 = random.randint(0, 9)
     pin = str(pin0)+str(pin1)+str(pin2)+str(pin3)
-    pin = int(pin)
     logger.debug("Fournisseur de carte--- Nouveau Pin généré")
     return pin
 
@@ -146,7 +154,7 @@ while True:
         while r != []:
             print("Carte détéctée\n")
             affiche = 0
-            connexion(r)
+            connection=connexion(r)
             if verr == True:
                 print("Carte vérouillée")
             else:
@@ -180,6 +188,8 @@ while True:
                                 "Rentrer le secret afin de dévérouiller la carte")
                             lock_cart(secret)
                 if choix == "4":
-                    deconnexion()
+                    deconnexion(connection)
                     print("Carte déconnectée\n")
                     init = False
+                    sys.exit()
+                    

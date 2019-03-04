@@ -8,66 +8,81 @@ import logging
 import ecdsa
 import random
 import subprocess
-affiche=0
+affiche = 0
 logger = logging.getLogger()
 
+
 def hex_to_str(value_hex):
-    string_value=bytearray.fromhex(value_hex).decode()
+    string_value = bytearray.fromhex(value_hex).decode()
     return string_value
 
+
 def list_int_to_hex(list_in):
-    stringhex=""
+    stringhex = ""
     for i in list_in:
-        stringhex+=hex(i)
-    stringstring=hex_to_str(stringhex[2:])
+        stringhex += hex(i)
+    stringstring = hex_to_str(stringhex[2:])
     return stringstring
+
 
 def connexion(r):
     global logger
-    connection=r[0].createConnection()
+    connection = r[0].createConnection()
     connection.connect()
    # logger.info("Fournisseur de carte--- Connexion sur la carte")
     logger.setLevel(logging.DEBUG)
-    #logger.setLevel(logging.RELEASE)
-    formatter = logging.Formatter('%(asctime)s :: %(levelname)s :: %(message)s')
+    # logger.setLevel(logging.RELEASE)
+    formatter = logging.Formatter(
+        '%(asctime)s :: %(levelname)s :: %(message)s')
     file_handler = RotatingFileHandler('tpe.log', 'a', 1000000, 1)
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)  
+    logger.addHandler(file_handler)
     print("Connexion de la carte\n")
+    data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
+    print(hex(sw1),hex(sw2))
+    return connection
 
-def deconnexion():
-    global logger 
+
+def deconnexion(connection):
+    global logger
     print("Déconnexion de la carte\n")
     connection.disconnect()
 
 
 def decrement_credit(value):
     global logger
-    print("Demande de payement d'une valeur de "+value +"en cours...\n")
-    hexvalue=hex(value)
-    #Remplacer par le bon appel et les bon param
-    data, sw1, sw2 = connection.transmit([[0xB0,0x01,0x00,0x00,hexvalue ,0x00,0x7F]
-    fichier = open("secretpublictpe", "r")
-    publickey= fichier.readline()#numparti,montantactuel;signature
+    print("Demande de payement d'une valeur de "+value + "en cours...\n")
+    hexvalue = hex(value)
+    # sélection applet
+    data, sw1, sw2 = connection.transmit(
+        [0xB0, 0x05, 0x00, 0x00, hexvalue, 0x00, 0x7F])
+    fichier = os.open("secretpublictpe", "r")
+    publickey = fichier.readline()  # numparti,montantactuel;signature
     for publickey in fichier:
-        if data!=[]:
-            messagesign=data[2].encode('ascii')
-            numparticipant=data[0].encode('ascii')
-            montantactuel=data[1].encode('ascii')
-            message=numparticipant+montant
-            verifkey = ecdsa.VerifyingKey.from_string(bytes.fromhex(publickey), curve=ecdsa.SECP256k1)
-            result=verifkey.verify(bytes.fromhex(messagesign), message) # True
-            if result==True:
+        if data != []:
+            messagesign = data[2].encode('ascii')
+            numparticipant = data[0].encode('ascii')
+            montantactuel = data[1].encode('ascii')
+            message = numparticipant+montant
+            verifkey = ecdsa.VerifyingKey.from_string(
+                bytes.fromhex(publickey), curve=ecdsa.SECP256k1)
+            result = verifkey.verify(
+                bytes.fromhex(messagesign), message)  # True
+            if result == True:
                 fichier.close()
-                if (sw1=="0x90" and sw2=="0x00"):
-                    print("Payement de "+value +"crédits effectué il vous reste" +montant+ "crédits\n")
-                    logger.info("TPE--- Participant numéro"+numparticipant+"Payement effectué il vous reste" +montant+ "crédits")
+                if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
+                    print("Payement de "+value +
+                          "crédits effectué il vous reste" + montant + "crédits\n")
+                    logger.info("TPE--- Participant numéro"+numparticipant +
+                                "Payement effectué il vous reste" + montant + "crédits")
                     return True
                 else:
+                    print(sw1, sw2)
                     print("Echec du paiement\n")
                     fichier.close()
-                    logger.info("TPE--- Participant numéro"+numparticipant+" Echec du paiement d'un montant de"+montant)
+                    logger.info("TPE--- Participant numéro"+numparticipant +
+                                " Echec du paiement d'un montant de"+montant)
                     return False
         else:
             fichier.close()
@@ -77,27 +92,36 @@ def decrement_credit(value):
     print("Echec d'authentification de l'opération\n")
     return False
 
-def checkpin(pin):
+
+def checkpin(pin, connection):
     global logger
     print("Vérification du code PIN en cours....\n")
-    pinvalue=hex(pin)
-    #Remplacer par le bon appel et les bon param
-    data, sw1, sw2 = connection.transmit([0xB0,0x00,0x00,0x00, pinvalue])
+
+    # Remplacer par le bon appel et les bon param
+    data, sw1, sw2 = connection.transmit(
+        [0xB0, 0x00, 0x00, 0x00, 0x02, int(pin[:2]), int(pin[2:]) ])
+    print(hex(sw1),hex(sw2))
     fichier = open("secretpubliccarte", "r")
     for publickey in fichier:
-    #Verification d'authentification
-        if data!=[]:
-            message=data[1].encode('ascii') 
-            verifkey = ecdsa.VerifyingKey.from_string(bytes.fromhex(publickey), curve=ecdsa.SECP256k1)
-            datasign=hex_to_str(data[2])
-            result=verifkey.verify(bytes.fromhex(datasign), message) # True
-            if result==True:
+        # Verification d'authentification
+        print(sw1, sw2)
+        data, sw1, sw2 = connection.transmit(
+        [0xB0, 0x04, 0x00, 0x00, 0x00 ])
+        prenom =''
+        if data != []:
+            info = ''.join(data[:29]).encode()
+            signature = ''.join(data[29:]).encode()
+            verifkey = ecdsa.VerifyingKey.from_string(
+                signature, curve=ecdsa.SECP256k1)
+            datasign = hex_to_str(data[2])
+            result = verifkey.verify(bytes.fromhex(datasign), message)  # True
+            if result == True:
                 fichier.close()
-                #Si le retour carte est OK alors PIN OK
-                if (sw1=="0x90" and sw2=="0x00"):
+                # Si le retour carte est OK alors PIN OK
+                if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
                     print("PIN vérifié, authentification réussie\n")
-                    return True            
-                else: 
+                    return True
+                else:
                     print("Mauvais PIN echec d'authentification\n")
                     return False
         else:
@@ -109,36 +133,33 @@ def checkpin(pin):
     return False
 
 
-
-#Main
-
-
+# Main
 while True:
-    montant=input("Bonjour veuillez rentrer le crédit à prelever\n")
-    if montant>"0" and montant<="500": 
-        r=readers()
-        if r==[]:
-            if affiche==0:
+    montant = input("Bonjour veuillez rentrer le crédit à prelever\n")
+    if montant > "0" and montant <= "500":
+        r = readers()
+        if r == []:
+            if affiche == 0:
                 print("Bonjour veuillez insérer une carte afin de l'initialiser\n")
-                affiche+=1
+                affiche += 1
         else:
-            while r!=[]:
+            while r != []:
                 print("Carte détécter\n")
-                affiche=0
-                connexion()
-                pin=input("Bonjour veuillez rentrer votre code PIN pour procéder a un prélévement d'un montant de"+montant+"crédits\n")
-                if len(pin)>0 and len(pin)>=4:
-                    check=checkpin(pin)
-                    if check==True:
+                affiche = 0
+                connection = connexion(r)
+                pin = input(
+                    "Bonjour veuillez rentrer votre code PIN pour procéder a un prélévement d'un montant de "+montant+" crédits\n")
+                if len(pin) > 0 and len(pin) >= 4:
+                    check = checkpin(pin, connection)
+                    if check == True:
                         decrement_credit(montant)
-                        deconnexion()
+                        deconnexion(connection)
                         print("Payement effectué, veuillez retirer la carte\n")
                     else:
                         print("Veuillez resaisir votre code PIN\n")
-                else: 
+                else:
                     print("Format 4 chiffres du PIN non respécté\n")
                 print("Deconnexion de la carte\n")
-                deconnexion()
+                deconnexion(connection)
     else:
         print("Le montant demandé doit être compris entre 1 et 500 crédits\n")
-

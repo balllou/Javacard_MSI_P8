@@ -1,3 +1,306 @@
 2019-03-04 10:47:19,986 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
 2019-03-04 10:47:25,989 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
 2019-03-04 10:47:25,990 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 15:03:08,341 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 15:03:15,096 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 15:03:15,097 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 15:41:23,868 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 15:41:30,127 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 15:41:30,128 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:13:27,308 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:13:34,005 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:13:34,006 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:14:02,536 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:14:07,800 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:14:07,800 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:20:04,589 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:20:09,695 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:20:09,695 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:20:43,427 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:20:48,297 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:20:48,297 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:20:49,428 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:20:49,429 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:20:49,429 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:21:45,817 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:21:50,951 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:21:50,951 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:21:52,128 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:21:52,129 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:21:52,129 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:24:28,150 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:24:32,668 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:24:32,668 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:24:33,042 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:24:33,042 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:24:33,042 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:27:42,974 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:27:48,224 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:27:48,224 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:27:48,571 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:27:48,572 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:27:48,572 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:29:47,057 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:29:51,241 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:29:51,242 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:29:54,279 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:29:54,280 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:29:54,280 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:56:07,464 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:56:12,890 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 16:56:12,890 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 16:56:17,363 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 16:56:17,364 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:56:17,364 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 16:56:21,021 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 16:56:21,021 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:28:49,356 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:28:56,715 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 17:28:56,715 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 17:29:01,132 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:01,132 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:01,132 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:04,542 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:04,542 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:04,679 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:04,679 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:04,680 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:04,680 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:04,680 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:08,515 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:08,515 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:08,515 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:08,646 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:08,646 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:08,646 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:08,647 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:08,647 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:08,647 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:08,647 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:09,882 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:09,882 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:09,882 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:09,882 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:10,008 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,148 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:11,148 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:11,148 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:11,148 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:11,148 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:11,280 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:11,280 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:11,280 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:11,280 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:11,280 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:11,282 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:13,886 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,020 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,021 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,649 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,777 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:14,779 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,277 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,412 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:15,992 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,119 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:29:16,120 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:30:25,382 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:30:27,879 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:30:28,015 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:30:28,015 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:30:28,015 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:32:03,759 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:32:05,423 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:34:18,295 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:43:25,081 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:43:37,121 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 17:43:37,121 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 17:43:41,479 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 17:43:41,480 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:43:41,480 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 17:43:46,208 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 17:43:46,208 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:05:00,037 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:05:07,490 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:05:07,491 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:05:11,839 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:05:11,840 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:05:11,840 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:05:14,133 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:05:14,133 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:13:49,608 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:13:58,885 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:13:58,885 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:14:00,115 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:14:00,116 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:14:00,116 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:14:08,788 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:14:08,788 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:15:50,154 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:15:53,726 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:15:53,726 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:15:58,316 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:15:58,317 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:15:58,317 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:16:06,505 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:16:06,505 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:16:22,583 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:16:26,469 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:16:26,470 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:16:31,001 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:16:31,002 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:16:31,002 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:16:39,292 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:16:39,292 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:17:55,239 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:18:00,975 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:18:00,975 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:18:05,394 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:18:05,395 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:18:05,395 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:18:14,281 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:18:14,281 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:20:40,727 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:20:44,474 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:20:44,474 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:20:48,949 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:20:48,949 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:20:48,949 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:21:30,826 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:21:30,826 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:21:37,572 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:21:41,857 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:21:41,857 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:21:46,354 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:21:46,356 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:21:46,356 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:23:57,504 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:23:57,504 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:24:04,581 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:24:08,303 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:24:08,303 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:24:11,363 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:24:11,364 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:24:11,364 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:24:22,076 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:24:22,076 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:25:12,238 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:17,420 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:25:17,421 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:25:18,619 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:25:18,619 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:18,619 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:23,252 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:25:23,252 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:25:29,395 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:33,524 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:25:33,524 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:25:36,485 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:25:36,485 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:36,485 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:25:40,185 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:25:40,185 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:32:39,811 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:32:45,331 :: DEBUG :: Fournisseur de carte--- Génération d'un nouveau PIN
+2019-03-04 18:32:45,331 :: DEBUG :: Fournisseur de carte--- Nouveau Pin généré
+2019-03-04 18:32:48,322 :: DEBUG :: Fournisseur de carte--- Connexion sur la carte
+2019-03-04 18:32:48,322 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:32:48,322 :: DEBUG :: Fournisseur de carte --- Connexion de la carte
+2019-03-04 18:36:08,229 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
+2019-03-04 18:36:08,229 :: DEBUG :: Fournisseur de carte --- Déconnexion de la carte
