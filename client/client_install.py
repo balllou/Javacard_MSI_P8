@@ -52,7 +52,7 @@ def init_carte(name, surname):
         pinhex="0"+pinhex
     # Génération de la pair de clés ECDSA pour signer la carte
     clesecrete = ecdsa.SigningKey.generate(
-        curve=ecdsa.SECP256k1)  # Géneration clé secrete carte
+        curve=ecdsa.NIST192p)  # Géneration clé secrete carte
     clesecrete_string = (clesecrete.to_string()).hex()
     clepublic = clesecrete.get_verifying_key()  # Génération clé publique carte
     clepubcarte_string = (clepublic.to_string()).hex()
@@ -63,10 +63,12 @@ def init_carte(name, surname):
     file_.write(clepubcarte_string + "\n")
     file_.close()
 
+    
+
     hex_sign=str(binascii.hexlify(signdata))[2:130]
     print(len(hex_sign+pinhex+surnamehex+namehex+compteur_participant_hex))
     reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
-                                       '../Festival304.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
+                                       '../Festival221.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
     
     
     if reponse.startswith("No smart"):
@@ -142,7 +144,7 @@ while True:
             affiche += 1
     else:
         while r != []:
-            print("Carte détécter\n")
+            print("Carte détéctée\n")
             affiche = 0
             connexion(r)
             if verr == True:

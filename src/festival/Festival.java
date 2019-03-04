@@ -34,7 +34,7 @@ public class Festival extends Applet {
 	private byte[] MESS_DEBUG = { 'D', 'e', 'B', 'U', 'G', ' ' };
 
 	// tailles pour la chaine hex en paramètre d'install
-	private static final byte PIN_LENGTH = 0x04;
+	private static final byte PIN_LENGTH = 0x02;
 	private static final byte PIN_TRY_LIMIT = 0x03;
 	private static final byte FAM_NAME_LENGTH = 0x18;
 	private static final byte NAME_LENGTH = 0x18;
@@ -109,30 +109,16 @@ public class Festival extends Applet {
 
 		JCSystem.requestObjectDeletion();
 
-		eccKey = new KeyPair(KeyPair.ALG_EC_FP,javacard.security.KeyBuilder.LENGTH_EC_FP_256);
-		eccKeyLen = (short) 32;
+		eccKey = new KeyPair(KeyPair.ALG_EC_FP,javacard.security.KeyBuilder.LENGTH_EC_FP_192);
+		eccKeyLen = (short) 28;
 		eccKey.genKeyPair();
 		m_secret_key = eccKey.getPrivate();
 
 		m_public_key = eccKey.getPublic();
-
-
-		// byte[] m_secret_key_byte = JCSystem.makeTransientByteArray((short) SECRET_KEY_LENGTH, JCSystem.CLEAR_ON_RESET);																														
-		// // m_secret_key= new byte [(short)SECRET_KEY_LENGTH];
-		// Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH
-		// 		+ FAM_NAME_LENGTH + NUM_PARTICIPANT_LENGTH + SIGNATURE_LENGTH), m_secret_key_byte, (short) 0,
-		// 		SECRET_KEY_LENGTH);
-		// try {
-		// 	KeyFactory kf = KeyFactory.getInstance("EC");
-		// 	m_secret_key = kf.generatePrivate(new PKCS8EncodedKeySpec(m_secret_key_byte));
-		// } catch (Exception e) {
-		// 	// todo afficher une exeption
-		// }
-		// // crédits
-		// m_credit = (short) 500;
+	
 
 	}
-
+	
 	// methode d'installation de l'applet sur la carte (appelée avec gp -v --install
 	// Festival221.cap --params 0102426f)
 	public static void install(byte bArray[], short bOffset, byte bLength) throws ISOException {
@@ -140,7 +126,7 @@ public class Festival extends Applet {
 		// bArray,bOffset,bLength
 		new Festival(bArray, bOffset, bLength).register();
 	}
-
+	
 	public void process(APDU apdu) throws ISOException {
 		byte[] buffer = apdu.getBuffer();
 
@@ -226,7 +212,7 @@ public class Festival extends Applet {
 			case INS_GET_PUB:
 
 			ECPublicKey ECkey_to_send = (ECPublicKey)m_public_key;
-			byte [] key_to_send= new byte[(short)64];
+			byte [] key_to_send= new byte[(short)56];
 			ECkey_to_send.getW(key_to_send,(short)0);
 			
 			apdu.setOutgoingAndSend((short) 0,(short)64);
