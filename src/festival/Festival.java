@@ -36,10 +36,10 @@ public class Festival extends Applet {
 	// tailles pour la chaine hex en paramètre d'install
 	private static final byte PIN_LENGTH = 0x02;
 	private static final byte PIN_TRY_LIMIT = 0x03;
-	private static final byte FAM_NAME_LENGTH = 0x18;
-	private static final byte NAME_LENGTH = 0x18;
-	private static final byte NUM_PARTICIPANT_LENGTH = 0x0A;
-	private static final short SIGNATURE_LENGTH = 0x80; // 64 bit
+	private static final byte FAM_NAME_LENGTH = 0x0c;
+	private static final byte NAME_LENGTH = 0x0c;
+	private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
+	private static final short SIGNATURE_LENGTH = 0x30;
 
 	static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
 	static final short SW_PIN_VERIFICATION_FAILED = 0x6302;

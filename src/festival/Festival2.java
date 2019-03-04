@@ -24,31 +24,37 @@ public class Festival2 extends Applet {
     static final byte INS_GET_PUB = 0x01;
     static final byte INS_UPDATE_PIN = 0x02;
     static final byte INS_DEBUG = 0x03;
-    static final byte INS_GET_INFO_CLIENT = 0x07;
-    static final byte INS_DECREMENT = 0x08;
-    static final byte INS_ECHANGE_CREDIT = 0x09;
+    static final byte INS_GET_INFO_CLIENT = 0x04;
+    static final byte INS_DECREMENT = 0x05;
+    static final byte INS_ECHANGE_CREDIT = 0x06;
 
     // debug
     private byte[] MESS_DEBUG = { 'D', 'e', 'B', 'U', 'G', ' ' };
 
-    // tailles pour la chaine hex en paramètre d'install
+    // tailles 
     private static final byte PIN_LENGTH = 0x02;
     private static final byte PIN_TRY_LIMIT = 0x03;
     private static final byte FAM_NAME_LENGTH = 0x0c;
     private static final byte NAME_LENGTH = 0x0c;
     private static final byte NUM_PARTICIPANT_LENGTH = 0x05;
+    private static final byte PRIVATE_KEY_LENGTH = 0x1c;
+    private static final byte SIGNATURE_CARTE_LENGTH = 0x38;
+
+    //exeptions
 
     static final short SW_PIN_VERIFICATION_REQUIRED = 0x6301;
     static final short SW_PIN_VERIFICATION_FAILED = 0x6302;
-    static final short SW_CREDIT_INSUFFISANT = 0x6363;
+    static final short SW_CREDIT_INSUFFISANT = 0x6303;
 
-    // attributs (initialisés dans le constructeur)
+    // attributs 
 
     private static OwnerPIN m_pin;
     private static byte[] m_name;
     private static byte[] m_fam_name;
     private static byte[] m_num_participant;
     private static short m_credit;
+    private static byte[] signature_carte;
+    private static byte[] private_key;
 
     // constructeur
     private Festival2(byte[] bArray, short bOffset, byte bLength) throws ISOException {
@@ -59,13 +65,11 @@ public class Festival2 extends Applet {
         if ((byte) dataLength != (byte) (PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH + NUM_PARTICIPANT_LENGTH)) {
             ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
         }
-        // récupération des data passés en paramètres
-        // exemple : gp -v --install Festival221.cap --params 0102426f
-        // récupération pin
+        
+        // pin
         m_pin = new OwnerPIN(PIN_TRY_LIMIT, PIN_LENGTH);
         m_pin.update(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1), PIN_LENGTH);
 
-        // récupération des infos du client et de la signature correspondante
         // nom de famille
         m_fam_name = new byte[(short) FAM_NAME_LENGTH];
         Util.arrayCopyNonAtomic(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH),
@@ -80,6 +84,22 @@ public class Festival2 extends Applet {
         Util.arrayCopyNonAtomic(bArray,
                 (short) (bOffset + 1 + aidLength + 1 + controlLength + 1 + PIN_LENGTH + FAM_NAME_LENGTH + NAME_LENGTH),
                 m_num_participant, (short) 0, NUM_PARTICIPANT_LENGTH);
+
+        //Initialisation de la signature de la carte
+        signature_carte = new byte[(short)SIGNATURE_CARTE_LENGTH];
+        Util.arrayCopyNonAtomic(bArray,
+                                    (short) (bOffset+1+aidLength+1+controlLength+1+PIN_LENGTH+NOM_LENGTH+PRENOM_LENGTH+NUM_PARTICIPANT_LENGTH),//offset de source
+                                    signature_carte,
+                                    (short)0,
+                                    SIGNATURE_CARTE_LENGTH);
+
+        //Initialisation de la clé privée
+        private_key = new byte[(short)PRIVATE_KEY_LENGTH];
+        Util.arrayCopyNonAtomic(bArray,
+                                    (short) (bOffset+1+aidLength+1+controlLength+1+PIN_LENGTH+NOM_LENGTH+PRENOM_LENGTH+NUM_PARTICIPANT_LENGTH+SIGNATURE_CARTE_LENGTH),//offset de source
+                                    private_key,
+                                    (short)0,
+                                    PRIVATE_KEY_LENGTH);  
 
     }
 
