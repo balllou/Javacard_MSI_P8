@@ -71,7 +71,7 @@ public class Festival extends Applet {
                 + SIGNATURE_CARTE_LENGTH)) {
             ISOException.throwIt(ISO7816.SW_WRONG_LENGTH);
         }
-
+        m_credit = 500;
         // pin
         m_pin = new OwnerPIN(PIN_TRY_LIMIT, PIN_LENGTH);
         m_pin.update(bArray, (short) (bOffset + 1 + aidLength + 1 + controlLength + 1), PIN_LENGTH);
@@ -172,42 +172,38 @@ public class Festival extends Applet {
             Util.arrayCopy(m_fam_name, (short) 0, buffer, (short) m_name.length, (short) m_fam_name.length);
             Util.arrayCopy(m_num_participant, (short) 0, buffer, (short) (m_name.length + m_fam_name.length),
                     (short) m_num_participant.length);
-                    Util.arrayCopy(signature_carte, (short) 0, buffer, (short) (m_name.length + m_fam_name.length+64),
-                    (short) m_num_participant.length);
+                    Util.arrayCopy(signature_carte, (short) 0, buffer, (short) (m_name.length + m_fam_name.length+m_num_participant.length),
+                    (short) signature_carte.length);
             apdu.setOutgoingAndSend((short) 0, (short) (m_name.length + m_fam_name.length + 5+64));
     }
 
     static void payer(APDU apdu){
         byte [] buffer = apdu.getBuffer();
         apdu.setIncomingAndReceive();
-            byte temp = buffer[ISO7816.OFFSET_CDATA];
-            if ((short) (m_credit - temp) <= (short) 0) {
-                ISOException.throwIt(SW_CREDIT_INSUFFISANT);
-            } else {
-                m_credit -= temp;
-                buffer[0] = (byte) (m_credit & 0xFF);
-                buffer[1] = (byte) ((m_credit>>8)&0xFF);
-
-                //signature côté carte non fonctionnelle
-
-                // // signature du nouveau montant sur la carte et du numéro de participant
-                // // récupération de la clé privée et création d'une signature
-                // byte[] str_to_sign = new byte[(short) (NUM_PARTICIPANT_LENGTH + 2 + 48)];
-                // Util.arrayCopy(m_num_participant, (short) 0, str_to_sign, (short) 0, NUM_PARTICIPANT_LENGTH);
-                // str_to_sign[(short) (NUM_PARTICIPANT_LENGTH + 1)] = (byte) (m_credit & 0xFF);
-                // str_to_sign[(short) (NUM_PARTICIPANT_LENGTH + 2)] = (byte) ((m_credit >> 8) & 0xFF);
-
-                // ecdsa.init(m_secret_key, Signature.MODE_SIGN);
-                // ecdsa.sign(str_to_sign, (short) 0, (short) str_to_sign.length, buffer,
-                //         (short) (NUM_PARTICIPANT_LENGTH + 3));
-                // apdu.setOutgoingAndSend((short) 0, (short) (NUM_PARTICIPANT_LENGTH + 2 + 48));
-
-                // // envoi des infos signées au client TPE
-                // Util.arrayCopy(str_to_sign, (short) 0, buffer, (short) 0, (short) str_to_sign.length);
-                 apdu.setOutgoingAndSend((short) 0, (short) 2);
-            }
+        short temp = Util.makeShort(buffer[ISO7816.OFFSET_CDATA+1],buffer[ISO7816.OFFSET_CDATA]);
+        if (m_credit < temp){
+            ISOException.throwIt(SW_CREDIT_INSUFFISANT);
+        }
+        m_credit = (short)(m_credit - temp);
+        Util.setShort(buffer,(short)0,m_credit);
+        apdu.setOutgoingAndSend((short)0,(short)2);
     }
+         //signature côté carte non fonctionnelle
 
+            // // signature du nouveau montant sur la carte et du numéro de participant
+            // // récupération de la clé privée et création d'une signature
+            // byte[] str_to_sign = new byte[(short) (NUM_PARTICIPANT_LENGTH + 2 + 48)];
+            // Util.arrayCopy(m_num_participant, (short) 0, str_to_sign, (short) 0, NUM_PARTICIPANT_LENGTH);
+            // str_to_sign[(short) (NUM_PARTICIPANT_LENGTH + 1)] = (byte) (m_credit & 0xFF);
+            // str_to_sign[(short) (NUM_PARTICIPANT_LENGTH + 2)] = (byte) ((m_credit >> 8) & 0xFF);
+
+            // ecdsa.init(m_secret_key, Signature.MODE_SIGN);
+            // ecdsa.sign(str_to_sign, (short) 0, (short) str_to_sign.length, buffer,
+            //         (short) (NUM_PARTICIPANT_LENGTH + 3));
+            // apdu.setOutgoingAndSend((short) 0, (short) (NUM_PARTICIPANT_LENGTH + 2 + 48));
+
+            // // envoi des infos signées au client TPE
+            // Util.arrayCopy(str_to_sign, (short) 0, buffer, (short) 0, (short) str_to_sign.length);
 
     static boolean verify(APDU apdu) throws ISOException {
 

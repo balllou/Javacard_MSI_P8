@@ -66,29 +66,24 @@ def init_carte(name, surname):
     # file_.close()
 
     
-    skcarte = SigningKey.generate() #generation clef privée
-    vkcarte = sk.get_verifying_key() #génération clef publique
-    open("privatecarte.pem","w").write(sk.to_pem())
-    open("publiccarte.pem","w").write(vk.to_pem())
-    message = namehex+surnamehex+str(compteurparticipant)  # données a signer
+    skcarte=SigningKey.from_pem(open("client/privatecarte.pem").read())
+
+    message = namehex+surnamehex+compteur_participant_hex # données a signer
     signdata = skcarte.sign(message.encode("utf-8"))  # Exemple signature message
-    print("Secret:" + str(signdata))
     # sktpe = SigningKey.generate() #generation clef privée
     # vktpe = sk.get_verifying_key() #génération clef publique
     # open("privatetpe.pem","w").write(sk.to_pem())
     # open("publictpe.pem","w").write(vk.to_pem())
-    hex_sign=str(binascii.hexlify(signdata))[2:130]
-    print(len(pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign))
+    hex_sign= signdata.hex()
+    #print(len(pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign))
     # reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
     #                                    '../Festival221.cap', '--param', pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign])
-    print(pinhex)
-    print (len(surnamehex))
-    print(len(namehex))
-    print(len(compteur_participant_hex))
-    print(len(hex_sign))
+    #print(hex_sign)
+    #print(message)
     command = 'java -jar /home/grs/JavaCard/GlobalPlatformPro/gp.jar --install ../Javacard_MSI_P8/Festival221.cap --param '+pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign
-    print(command)
+
     os.system(command)
+    #sys.exit()
     # if reponse.startswith("No smart"):
     #     logger.DEBUG(
     #         "Fournisseur de carte--- Echec d'initialisation de la carte")
@@ -196,7 +191,7 @@ while True:
                             unlock_card(signdata)
                         else:
                             secret = input(
-                                "Rentrer le secret afin de dévérouiller la carte")
+                                "Rentrer le secret afin de dévérouiller la carte\n")
                             lock_cart(secret)
                 if choix == "4":
                     deconnexion(connection)

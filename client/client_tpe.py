@@ -9,8 +9,10 @@ import ecdsa
 import random
 import subprocess
 affiche = 0
+import sys
 logger = logging.getLogger()
 from ecdsa import VerifyingKey, BadSignatureError
+numparticipant=""
 
 def hex_to_str(value_hex):
     string_value = bytearray.fromhex(value_hex).decode()
@@ -40,40 +42,36 @@ def connexion(r):
     logger.addHandler(file_handler)
     print("Connexion de la carte\n")
     data, sw1, sw2 = connection.transmit([0x00,0xA4,0x04,0x00,0x08,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08])
-    print(hex(sw1),hex(sw2))
+    #print(hex(sw1),hex(sw2))
     return connection
 
 
 def deconnexion(connection):
     global logger
-    print("Déconnexion de la carte\n")
+   # print("Déconnexion de la carte\n")
     connection.disconnect()
 
 
 def decrement_credit(value):
+    global numparticipant
     global logger
-    print("Demande de payement d'une valeur de "+value + "en cours...\n")
-    hexvalue = hex(value)
+    print("Demande de payement d'une valeur de " +value + " en cours...\n")
     # sélection applet
     data, sw1, sw2 = connection.transmit(
-        [0xB0, 0x05, 0x00, 0x00, hexvalue, 0x00, 0x7F])
+        [0xB0, 0x05, 0x00, 0x00, 0x00, int(value)])
     #vk = VerifyingKey.from_pem(open("publicctpe.pem").read())
+    #print(data)
     if data != []:
-        messagesign = data[2].encode('ascii')
-        numparticipant = data[0].encode('ascii')
-        montantactuel = data[1].encode('ascii')
-        message = numparticipant+montant
-        if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
-            print("Payement de "+value +
-                          "crédits effectué il vous reste" + montant + "crédits\n")
-            logger.info("TPE--- Participant numéro"+numparticipant +
-                                "Payement effectué il vous reste" + montant + "crédits")
-            return True
-        else:
-            print("Echec du paiement\n")
-            logger.info("TPE--- Participant numéro"+numparticipant +
-                                " Echec du paiement d'un montant de"+montant)
-            return False
+        montant= str((data[0]<<8)+data[1])
+        print("Payement de "+value +
+                          "crédits effectué il vous reste " + montant + " crédits\n")
+        logger.info("TPE--- Participant numéro "+numparticipant +
+                                "Payement effectué il vous reste " + montant + " crédits")
+        return True
+    else:
+        print("Echec du paiement\n")
+        logger.info("TPE--- Participant numéro"+numparticipant )
+        return False
         # try:
         #     vk.verify(messagesign, message)
         #     print ("good signature")
@@ -91,45 +89,61 @@ def decrement_credit(value):
         #         return False
         # except BadSignatureError:
         #     print ("mauvaise signature")       
-    else:
-        print("Aucune données reçu \n")
-        return False
-    print("Echec d'authentification de l'opération\n")
-    return False
+
+
 
 
 def checkpin(pin, connection):
-    global logger
+    global logger, numparticipant
     print("Vérification du code PIN en cours....\n")
-
     # Remplacer par le bon appel et les bon param
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x00, 0x00, 0x00, 0x02, int(pin[:2]), int(pin[2:]) ])
-    print(hex(sw1),hex(sw2))
+    #print(hex(sw1),hex(sw2))
+    
     #print(sw1, sw2)
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x04, 0x00, 0x00, 0x00 ])
-    vk = VerifyingKey.from_pem(open("publiccarte.pem").read())
+    vk = VerifyingKey.from_pem(open("client/publiccarte.pem").read())
     prenom =''
+    info =''
+    signature = ''
     if data != []:
-        info = ''.join(data[:29]).encode()
-        signature = ''.join(data[29:]).encode()
+        cpt = 0
+        for i in data:
+            if cpt<29:
+                if cpt>24:
+                    numparticipant += chr(i)
+                d = hex(i)
+                if(len(d)<4):
+                    d = '0'+d
+                info += d
+            else :
+                d = hex(i)
+                if(len(d)<4):
+                    d = '0'+d
+                signature += d
+            cpt +=1
+        #print (numparticipant)
+        info = info.replace('0x','')
+        signature = signature.replace('0x','')
+       # numparticipant=
+        info=info.encode()
+        signature=bytes.fromhex(signature)
+        #=''.join(data[24:29])
+        #Recup num participant
         try:
             vk.verify(signature, info)
-            print ("good signature")
-            if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
-                print("PIN vérifié, authentification réussie\n")
-                return True
-            else:
-                print("Mauvais PIN echec d'authentification\n")
-                return False
+            #print ("good signature")
+            print("PIN vérifié, authentification réussie\n")
+            return True
         except BadSignatureError:
             print ("BAD SIGNATURE")
-    else:
-        print("Aucune données reçu \n")
-        return False
-    print("Carte non délivrée par nos équipes\n")
-    return False
+            print("Carte non délivrée par nos équipes\n")
+            sys.exit()
+            return False
+    
+   
 
 
 # Main
@@ -160,5 +174,6 @@ while True:
                     print("Format 4 chiffres du PIN non respécté\n")
                 print("Deconnexion de la carte\n")
                 deconnexion(connection)
+                sys.exit()
     else:
         print("Le montant demandé doit être compris entre 1 et 500 crédits\n")
