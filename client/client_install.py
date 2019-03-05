@@ -10,6 +10,7 @@ import random
 import subprocess
 import binascii
 import sys
+from ecdsa import SigningKey
 
 compteurparticipant = 0
 verr = False
@@ -52,17 +53,31 @@ def init_carte(name, surname):
     while len(str(pinhex)) < 4:
         pinhex="0"+pinhex
     # Génération de la pair de clés ECDSA pour signer la carte
-    clesecrete = ecdsa.SigningKey.generate(
-        curve=ecdsa.NIST256p)  # Géneration clé secrete carte
-    clesecrete_string = (clesecrete.to_string()).hex()
-    clepublic = clesecrete.get_verifying_key()  # Génération clé publique carte
-    clepubcarte_string = (clepublic.to_string()).hex()
+    # clesecrete = ecdsa.SigningKey.generate(
+    #     curve=ecdsa.NIST256p)  # Géneration clé secrete carte
+    # clesecrete_string = (clesecrete.to_string()).hex()
+    # clepublic = clesecrete.get_verifying_key()  # Génération clé publique carte
+    # clepubcarte_string = (clepublic.to_string()).hex()
+    # message = namehex+surnamehex+str(compteurparticipant)  # données a signer
+    # signdata = clesecrete.sign(message.encode("utf-8"))  # Exemple signature message
+    # print("Secret:" + str(signdata))
+    # file_ = open("secretpubliccarte", 'w')
+    # file_.write(clepubcarte_string + "\n")
+    # file_.close()
+
+    
+    skcarte = SigningKey.generate() #generation clef privée
+    vkcarte = sk.get_verifying_key() #génération clef publique
+    open("privatecarte.pem","w").write(sk.to_pem())
+    open("publiccarte.pem","w").write(vk.to_pem())
     message = namehex+surnamehex+str(compteurparticipant)  # données a signer
-    signdata = clesecrete.sign(message.encode("utf-8"))  # Exemple signature message
+    signdata = skcarte.sign(message.encode("utf-8"))  # Exemple signature message
     print("Secret:" + str(signdata))
-    file_ = open("secretpubliccarte", 'w')
-    file_.write(clepubcarte_string + "\n")
-    file_.close()
+
+    # sktpe = SigningKey.generate() #generation clef privée
+    # vktpe = sk.get_verifying_key() #génération clef publique
+    # open("privatetpe.pem","w").write(sk.to_pem())
+    # open("publictpe.pem","w").write(vk.to_pem())
 
    
 

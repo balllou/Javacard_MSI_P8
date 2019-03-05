@@ -10,7 +10,7 @@ import random
 import subprocess
 affiche = 0
 logger = logging.getLogger()
-
+from ecdsa import VerifyingKey, BadSignatureError
 
 def hex_to_str(value_hex):
     string_value = bytearray.fromhex(value_hex).decode()
@@ -57,38 +57,33 @@ def decrement_credit(value):
     # sélection applet
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x05, 0x00, 0x00, hexvalue, 0x00, 0x7F])
-    fichier = os.open("secretpublictpe", "r")
-    publickey = fichier.readline()  # numparti,montantactuel;signature
-    for publickey in fichier:
-        if data != []:
-            messagesign = data[2].encode('ascii')
-            numparticipant = data[0].encode('ascii')
-            montantactuel = data[1].encode('ascii')
-            message = numparticipant+montant
-            verifkey = ecdsa.VerifyingKey.from_string(
-                bytes.fromhex(publickey), curve=ecdsa.SECP256k1)
-            result = verifkey.verify(
-                bytes.fromhex(messagesign), message)  # True
-            if result == True:
-                fichier.close()
-                if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
-                    print("Payement de "+value +
+    vk = VerifyingKey.from_pem(open("publicctpe.pem").read())
+    if data != []:
+        messagesign = data[2].encode('ascii')
+        numparticipant = data[0].encode('ascii')
+        montantactuel = data[1].encode('ascii')
+        message = numparticipant+montant
+        try:
+            vk.verify(messagesign, message)
+            print ("good signature")
+            if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
+                print("Payement de "+value +
                           "crédits effectué il vous reste" + montant + "crédits\n")
-                    logger.info("TPE--- Participant numéro"+numparticipant +
+                logger.info("TPE--- Participant numéro"+numparticipant +
                                 "Payement effectué il vous reste" + montant + "crédits")
-                    return True
-                else:
-                    print(sw1, sw2)
-                    print("Echec du paiement\n")
-                    fichier.close()
-                    logger.info("TPE--- Participant numéro"+numparticipant +
+                return True
+            else:
+                print("Echec du paiement\n")
+                fichier.close()
+                logger.info("TPE--- Participant numéro"+numparticipant +
                                 " Echec du paiement d'un montant de"+montant)
-                    return False
-        else:
-            fichier.close()
-            print("Aucune données reçu \n")
-            return False
-    fichier.close()
+                return False
+        except BadSignatureError:
+            print ("mauvaise signature")       
+    else:
+            
+        print("Aucune données reçu \n")
+        return False
     print("Echec d'authentification de l'opération\n")
     return False
 
@@ -101,34 +96,33 @@ def checkpin(pin, connection):
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x00, 0x00, 0x00, 0x02, int(pin[:2]), int(pin[2:]) ])
     print(hex(sw1),hex(sw2))
-    fichier = open("secretpubliccarte", "r")
-    for publickey in fichier:
+    vk = VerifyingKey.from_pem(open("publiccarte.pem").read())
+    #fichier = open("secretpubliccarte", "r")
+    #for publickey in fichier:
         # Verification d'authentification
-        print(sw1, sw2)
-        data, sw1, sw2 = connection.transmit(
+    print(sw1, sw2)
+    data, sw1, sw2 = connection.transmit(
         [0xB0, 0x04, 0x00, 0x00, 0x00 ])
-        prenom =''
-        if data != []:
-            info = ''.join(data[:29]).encode()
-            signature = ''.join(data[29:]).encode()
-            verifkey = ecdsa.VerifyingKey.from_string(
+    prenom =''
+    if data != []:
+        info = ''.join(data[:29]).encode()
+        signature = ''.join(data[29:]).encode()
+        try:
+            vk.verify(signature, info)
+            print "good signature"
+            if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
+                print("PIN vérifié, authentification réussie\n")
+                return True
+            else:
+                print("Mauvais PIN echec d'authentification\n")
+                return False
+        except BadSignatureError:
+            print "BAD SIGNATURE"
+        verifkey = ecdsa.VerifyingKey.from_string(
                 signature, curve=ecdsa.SECP256k1)
-            datasign = hex_to_str(data[2])
-            result = verifkey.verify(bytes.fromhex(datasign), message)  # True
-            if result == True:
-                fichier.close()
-                # Si le retour carte est OK alors PIN OK
-                if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
-                    print("PIN vérifié, authentification réussie\n")
-                    return True
-                else:
-                    print("Mauvais PIN echec d'authentification\n")
-                    return False
-        else:
-            fichier.close()
-            print("Aucune données reçu \n")
-            return False
-    fichier.close()
+    else:
+        print("Aucune données reçu \n")
+        return False
     print("Carte non délivrée par nos équipes\n")
     return False
 
