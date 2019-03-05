@@ -186,6 +186,7 @@ public class Festival extends Applet {
             } else {
                 m_credit -= temp;
                 buffer[0] = (byte) (m_credit & 0xFF);
+                buffer[1] = (byte) ((m_credit>>8)&0xFF);
 
                 //signature côté carte non fonctionnelle
 
@@ -203,7 +204,7 @@ public class Festival extends Applet {
 
                 // // envoi des infos signées au client TPE
                 // Util.arrayCopy(str_to_sign, (short) 0, buffer, (short) 0, (short) str_to_sign.length);
-                // apdu.setOutgoingAndSend((short) 0, (short) 2);
+                 apdu.setOutgoingAndSend((short) 0, (short) 2);
             }
     }
 
