@@ -57,31 +57,41 @@ def decrement_credit(value):
     # sélection applet
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x05, 0x00, 0x00, hexvalue, 0x00, 0x7F])
-    vk = VerifyingKey.from_pem(open("publicctpe.pem").read())
+    #vk = VerifyingKey.from_pem(open("publicctpe.pem").read())
     if data != []:
         messagesign = data[2].encode('ascii')
         numparticipant = data[0].encode('ascii')
         montantactuel = data[1].encode('ascii')
         message = numparticipant+montant
-        try:
-            vk.verify(messagesign, message)
-            print ("good signature")
-            if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
-                print("Payement de "+value +
+        if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
+            print("Payement de "+value +
                           "crédits effectué il vous reste" + montant + "crédits\n")
-                logger.info("TPE--- Participant numéro"+numparticipant +
+            logger.info("TPE--- Participant numéro"+numparticipant +
                                 "Payement effectué il vous reste" + montant + "crédits")
-                return True
-            else:
-                print("Echec du paiement\n")
-                fichier.close()
-                logger.info("TPE--- Participant numéro"+numparticipant +
+            return True
+        else:
+            print("Echec du paiement\n")
+            logger.info("TPE--- Participant numéro"+numparticipant +
                                 " Echec du paiement d'un montant de"+montant)
-                return False
-        except BadSignatureError:
-            print ("mauvaise signature")       
+            return False
+        # try:
+        #     vk.verify(messagesign, message)
+        #     print ("good signature")
+        #     if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
+        #         print("Payement de "+value +
+        #                   "crédits effectué il vous reste" + montant + "crédits\n")
+        #         logger.info("TPE--- Participant numéro"+numparticipant +
+        #                         "Payement effectué il vous reste" + montant + "crédits")
+        #         return True
+        #     else:
+        #         print("Echec du paiement\n")
+        #         fichier.close()
+        #         logger.info("TPE--- Participant numéro"+numparticipant +
+        #                         " Echec du paiement d'un montant de"+montant)
+        #         return False
+        # except BadSignatureError:
+        #     print ("mauvaise signature")       
     else:
-            
         print("Aucune données reçu \n")
         return False
     print("Echec d'authentification de l'opération\n")
@@ -96,20 +106,17 @@ def checkpin(pin, connection):
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x00, 0x00, 0x00, 0x02, int(pin[:2]), int(pin[2:]) ])
     print(hex(sw1),hex(sw2))
-    vk = VerifyingKey.from_pem(open("publiccarte.pem").read())
-    #fichier = open("secretpubliccarte", "r")
-    #for publickey in fichier:
-        # Verification d'authentification
-    print(sw1, sw2)
+    #print(sw1, sw2)
     data, sw1, sw2 = connection.transmit(
         [0xB0, 0x04, 0x00, 0x00, 0x00 ])
+    vk = VerifyingKey.from_pem(open("publiccarte.pem").read())
     prenom =''
     if data != []:
         info = ''.join(data[:29]).encode()
         signature = ''.join(data[29:]).encode()
         try:
             vk.verify(signature, info)
-            print "good signature"
+            print ("good signature")
             if (hex(sw1) == "0x90" and hex(sw2) == "0x00"):
                 print("PIN vérifié, authentification réussie\n")
                 return True
@@ -117,9 +124,7 @@ def checkpin(pin, connection):
                 print("Mauvais PIN echec d'authentification\n")
                 return False
         except BadSignatureError:
-            print "BAD SIGNATURE"
-        verifkey = ecdsa.VerifyingKey.from_string(
-                signature, curve=ecdsa.SECP256k1)
+            print ("BAD SIGNATURE")
     else:
         print("Aucune données reçu \n")
         return False

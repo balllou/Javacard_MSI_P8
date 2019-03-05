@@ -73,14 +73,10 @@ def init_carte(name, surname):
     message = namehex+surnamehex+str(compteurparticipant)  # données a signer
     signdata = skcarte.sign(message.encode("utf-8"))  # Exemple signature message
     print("Secret:" + str(signdata))
-
     # sktpe = SigningKey.generate() #generation clef privée
     # vktpe = sk.get_verifying_key() #génération clef publique
     # open("privatetpe.pem","w").write(sk.to_pem())
     # open("publictpe.pem","w").write(vk.to_pem())
-
-   
-
     hex_sign=str(binascii.hexlify(signdata))[2:130]
     print(len(pinhex+surnamehex+namehex+compteur_participant_hex+hex_sign))
     # reponse = subprocess.check_output(['java', '-jar', '/home/grs/JavaCard/GlobalPlatformPro/gp.jar', '-install',
